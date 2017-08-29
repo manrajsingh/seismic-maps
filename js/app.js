@@ -142,6 +142,7 @@ function initMap() {
 }
 
 function geocodeAddress(geocoder, resultsMap, searchMarker) {
+  $("#result").html('<div style="text-align:center; margin-top:20px;"><img src="https://loading.io/spinners/hourglass/lg.sandglass-time-loading-gif.gif"></div>');
   $(".searchbox,.searchbutton").attr("disabled","disabled");
   $(".searchbutton").html("Searching ... ");
   var address = $(".searchbox").val();
@@ -231,12 +232,18 @@ function displayInfo(goog,usgs){
     sm_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.smSpectrum);
     make_chart("sm_chart_" + result_count, sm_data, "MCER Response Spectrum");
   }
+  if(usgs.response.data.smSpectrum == null && usgs.response.data.sdSpectrum == null) {
+    $(".spectrum-charts").hide();
+  }
+  else{
+    $(".spectrum-charts").show();
+  }
 }
 
 
 function make_chart(elm,chartData,chartTitle)
 {
-      google.charts.load('current', {'packages':['line']});
+      google.charts.load('current', {'packages':['corechart','line']});
       google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
@@ -244,12 +251,12 @@ function make_chart(elm,chartData,chartTitle)
 
         var options = {
           title: chartTitle,
-
           vAxis: { title: 'Sa(g)'},
-          hAxis : {title: 'Period, T (sec)'}
+          hAxis : {title: 'Period, T (sec)'},
+          legend: {'position': 'bottom' }
         };
 
-        var chart = new google.charts.Line(document.getElementById(elm));
+        var chart = new google.visualization.LineChart(document.getElementById(elm));
 
         chart.draw(data, options);
       }
