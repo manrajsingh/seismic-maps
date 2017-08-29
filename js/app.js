@@ -225,7 +225,7 @@ function make_chart(elm,chartData,chartTitle)
 
         var options = {
           title: chartTitle,
-          curveType: 'function',
+          
           vAxis: { title: 'Sa(g)'},
           hAxis : {title: 'Period, T (sec)'}
         };
