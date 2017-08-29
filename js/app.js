@@ -205,19 +205,38 @@ function displayInfo(goog,usgs){
     ssuh: usgs.response.data.ssuh,
     ssd: usgs.response.data.ssd
   };
+
+  for(key in usgs.response.data)
+  {
+    if(key.indexOf("_error")>0){
+      error_key = key.replace("_error","");
+      context[error_key] = usgs.response.data[key];
+
+      if(error_key == 'fv'){
+        context.sd1 = usgs.response.data[key];
+        context.sdc = usgs.response.data[key];
+        context.sm1 = usgs.response.data[key];
+      }
+    }
+  }
+
   var html = template(context);
   $("#result").html(html);
-  sd_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.sdSpectrum);
-  sm_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.smSpectrum);
 
-  make_chart("sd_chart_" + result_count, sd_data, "Design Response Spectrum");
-  make_chart("sm_chart_" + result_count, sm_data, "MCE R Response Spectrum");
+  if(usgs.response.data.sdSpectrum != null){
+    sd_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.sdSpectrum);
+    make_chart("sd_chart_" + result_count, sd_data, "Design Response Spectrum");
+  }
+  if(usgs.response.data.smSpectrum != null){
+    sm_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.smSpectrum);
+    make_chart("sm_chart_" + result_count, sm_data, "MCER Response Spectrum");
+  }
 }
 
 
 function make_chart(elm,chartData,chartTitle)
 {
-      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load('current', {'packages':['line']});
       google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
@@ -230,7 +249,7 @@ function make_chart(elm,chartData,chartTitle)
           hAxis : {title: 'Period, T (sec)'}
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById(elm));
+        var chart = new google.charts.Line(document.getElementById(elm));
 
         chart.draw(data, options);
       }
