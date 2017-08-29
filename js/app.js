@@ -113,6 +113,10 @@ var styles = {
           }
         ]};
 
+$(".searchbox").keyup(function(e){
+  $(".searchbox").val($(this).val());
+});
+
 function initMap() {
   // Create the map with no initial style specified.
   // It therefore has default styling.
@@ -126,10 +130,10 @@ function initMap() {
   var geocoder = new google.maps.Geocoder();
   var searchMarker = new google.maps.Marker({ map: map, animation: google.maps.Animation.DROP, draggable: true, });
 
-  document.getElementById('searchbutton').addEventListener('click', function() {
+  $('.searchbutton').click(function() {
     geocodeAddress(geocoder, map, searchMarker);
   });
-  document.getElementById('searchbox').addEventListener('keypress', function(e) {
+  $('.searchbox').keypress(function(e) {
     var key = e.which || e.keyCode;
     if (key === 13) {
       geocodeAddress(geocoder, map, searchMarker);
@@ -138,26 +142,97 @@ function initMap() {
 }
 
 function geocodeAddress(geocoder, resultsMap, searchMarker) {
-  $("#searchbox,#searchbutton").attr("disabled","disabled");
-  $("#searchbutton").html("Searching ... ");
-  var address = document.getElementById('searchbox').value;
+  $(".searchbox,.searchbutton").attr("disabled","disabled");
+  $(".searchbutton").html("Searching ... ");
+  var address = $(".searchbox").val();
 
   geocoder.geocode({'address': address}, function(results, status) {
     if (status === 'OK') {
       resultsMap.setCenter(results[0].geometry.location);
       searchMarker.setPosition(results[0].geometry.location);
 
-      $("#searchbox,#searchbutton").removeAttr("disabled");
-      $("#searchbutton").html("Search");
+      lat = results[0].geometry.location.lat();
+      lng = results[0].geometry.location.lng();
+
+      riskCategory = $("#risk-category").val();
+      siteClass = $("#site-class").val();
+      $.ajax({
+        method: 'GET',
+        dataType: 'json',
+        url: 'https://earthquake.usgs.gov/ws/designmaps/asce7-16.json',
+        data: {latitude:lat, longitude: lng, riskCategory: riskCategory, siteClass: siteClass, title: "Seismic Maps"},
+        success: function(data){
+          displayInfo(results[0],data);
+        },
+        fail: function(jqXHR, textStatus, errorThrown){
+          alert(errorThrown);
+        },
+      });
+      $(".searchbox,.searchbutton").removeAttr("disabled");
+      $(".searchbutton").html("Search");
+
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
-      $("#searchbox,#searchbutton").removeAttr("disabled");
-      $("#searchbutton").html("Search");
+      $(".searchbox,.searchbutton").removeAttr("disabled");
+      $(".searchbutton").html("Search");
     }
   });
 }
 
 
-function displayAddressInformation(){
-  
+function displayInfo(goog,usgs){
+
+  lat = goog.geometry.location.lat();
+  lng = goog.geometry.location.lng();
+  result_count =  $("#result > div").length;
+  source = $("#result-template").html();
+  template = Handlebars.compile(source);
+  context = {
+    result_count: result_count,
+    formatted_address: goog.formatted_address,
+    latlng: lat + ", " + lng,
+    pga: usgs.response.data.pga,
+    sds: usgs.response.data.sds,
+    sd1: usgs.response.data.sd1,
+    sms: usgs.response.data.sms,
+    sm1: usgs.response.data.sm1,
+    sdc: usgs.response.data.sdc,
+    fa: usgs.response.data.fa,
+    fv: usgs.response.data.fv,
+    fpga: usgs.response.data.fpga,
+    pgam: usgs.response.data.pgam,
+    ssrt: usgs.response.data.ssrt,
+    ssuh: usgs.response.data.ssuh,
+    ssd: usgs.response.data.ssd
+  };
+  var html = template(context);
+  $("#result").html(html);
+  sd_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.sdSpectrum);
+  sm_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.smSpectrum);
+
+  make_chart("sd_chart_" + result_count, sd_data, "Design Response Spectrum");
+  make_chart("sm_chart_" + result_count, sm_data, "MCE R Response Spectrum");
+}
+
+
+function make_chart(elm,chartData,chartTitle)
+{
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(chartData);
+
+        var options = {
+          title: chartTitle,
+          curveType: 'function',
+          vAxis: { title: 'Sa(g)'},
+          hAxis : {title: 'Period, T (sec)'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById(elm));
+
+        chart.draw(data, options);
+      }
+
 }

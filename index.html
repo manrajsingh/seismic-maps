@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <style type="text/css">
-      #map { display: block; width: 100%; height: 500px; }
+      #map { display: block; width: 100%; height: 300px; }
       .jumbotron { padding: 0px; }
     </style>
   </head>
@@ -47,9 +47,9 @@
           </ul>
           <div class="col-md-5">
             <div class="input-group">
-              <input type="text" id="searchbox" class="form-control" placeholder="Search Address or Lat,Long" aria-label="Search for...">
+              <input type="text" class="form-control searchbox" placeholder="Search Address or Lat,Long" aria-label="Search for...">
               <span class="input-group-btn">
-                <button class="btn btn-primary" id="searchbutton" type="button">Search</button>
+                <button class="btn btn-primary searchbutton" type="button">Search</button>
               </span>
             </div>
           </div>
@@ -61,43 +61,96 @@
       </div>
     </div>
     <div class="container">
-      <p>Search for an address or coordinates from the search text box in the menu.</p>
-      <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="input-group">
-          <span class="input-group-addon" id="btnGroupAddon">Risk Category <span class="glyphicons glyphicons-arrow-right"></span></span>
-          <select class="form-control" aria-describedby="btnGroupAddon">
-            <option value="I">I</option>
-            <option value="II">II</option>
-            <option value="III">III</option>
-            <option value="IV">IV</option>
-          </select>
-          <span class="input-group-addon" id="btnGroupAddon">Site Class <span class="glyphicons glyphicons-arrow-right"></span></span>
-          <select class="form-control" aria-describedby="btnGroupAddon">
-            <option value="A">A</option>
-            <option value="B (measured)">B (measured)</option>
-            <option value="B (unmeasured)">B (unmeasured)</option>
-            <option value="C">C</option>
-            <option value="D (determined)">D (determined)</option>
-            <option value="D (default)">D (default)</option>
-            <option value="E">E</option>
-          </select>
-          <input type="text" id="searchbox" class="form-control input-group-addon" placeholder="Search Address or Lat,Long" aria-label="Search for...">
-          <span class="input-group-btn">
-            <button class="btn btn-primary" id="searchbutton" type="button">Search</button>
-          </span>
+      <h3>Search for Address or Coordinates (lat,long)</h3> &nbsp;
+      <div class="row">
+          <div class="input-group col-6">
+            <span class="input-group-addon" id="btnGroupAddon">Risk Category <span class="glyphicons glyphicons-arrow-right"></span></span>
+            <select class="form-control" aria-describedby="btnGroupAddon" id="risk-category">
+              <option value="I">I</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV">IV</option>
+            </select>
+          </div>
+          <div class="input-group col-6">
+            <span class="input-group-addon" id="btnGroupAddon">Site Class <span class="glyphicons glyphicons-arrow-right"></span></span>
+            <select class="form-control" id="site-class" aria-describedby="btnGroupAddon">
+              <option value="A">A</option>
+              <option value="B (measured)">B (measured)</option>
+              <option value="B (unmeasured)">B (unmeasured)</option>
+              <option value="C">C</option>
+              <option value="D (determined)">D (determined)</option>
+              <option value="D (default)">D (default)</option>
+              <option value="E">E</option>
+            </select>
+          </div>
         </div>
+        &nbsp;
+        <div class="row">
+          <div class="input-group col-12">
+            <input type="text" class="form-control input-group searchbox" placeholder="Search Address or Lat,Long" aria-label="Search for...">
+            <span class="input-group-btn">
+              <button class="btn btn-primary searchbutton" type="button">Search</button>
+            </span>
+          </div>
       </div>
+      <!-- Results -->
+      <div id="result"></div>
+
+      <script id="result-template" type="text/x-handlebars-template">
+        <div class="card mt-5">
+          <div class="card-body">
+            <h4 class="card-title">{{formatted_address}}</h4>
+            <h6 class="card-subtitle mb-2 text-muted">{{latlng}}</h6>
+            <div>&nbsp;</div>
+            <div class="row">
+              <table class="table table-striped table-hover table-responsive table-sm table-bordered">
+                <thead>
+                  <tr><th>Type</th><th>Description</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>PGA</td><td>MCEG peak ground acceleration</td><td>{{pga}}</td></tr>
+                  <tr><td>Sds</td><td>Numeric seismic design value at 0.2 second SA</td><td>{{sds}}</td></tr>
+                  <tr><td>Sd1</td><td>Numeric seismic design value at 1.0 second SA</td><td>{{sd1}}</td></tr>
+                  <tr><td>Sms</td><td>Site-modified spectral acceleration value</td><td>{{sms}}</td></tr>
+                  <tr><td>Sdc</td><td>Seismic design category from sdcs and sdc1</td><td>{{sdc}}</td></tr>
+                  <tr><td>Sm1</td><td>Site-modified spectral acceleration value</td><td>{{sm1}}</td></tr>
+                  <tr><td>fa</td><td>Site amplification factor at 0.2 second</td><td>{{fa}}</td></tr>
+                  <tr><td>fv</td><td>Site amplification factor at 1.0 second</td><td>{{fv}}</td></tr>
+                  <tr><td>fpga</td><td>Site amplification factor at PGA</td><td>{{fpga}}</td></tr>
+                  <tr><td>pgam</td><td>Site modified peak ground acceleration</td><td>{{pgam}}</td></tr>
+                  <tr><td>ssrt</td><td>Probabilistic risk-targeted ground motion. (0.2 second)</td><td>{{ssrt}}</td></tr>
+                  <tr><td>ssuh</td><td>Factored uniform-hazard (2% probability of exceedance in 50 years) spectral acceleration</td><td>{{ssuh}}</td></tr>
+                  <tr><td>ssd</td><td>Factored deterministic acceleration value. (0.2 second)</td><td>{{ssd}}</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="float-lg-left">
+              <div id="sm_chart_{{result_count}}" style="width:100%; height: 300px;"></div>
+            </div>
+            <div class="float-lg-right">
+              <div id="sd_chart_{{result_count}}" style="width:100%; height: 300px;"></div>
+            </div>
+            <div style="clear:both;">&nbsp;.</div>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          </div>
+        </div>
+      </script>
+
     </div><!-- /.container -->
 
     <!-- Optional JavaScript -->
-    <script src="js/gis.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSDT8WeSFn_3dLYBo5cTq6sUOQVE4o2Gg&callback=initMap" async defer></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>js
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
+    <script src="js/app.js"></script>
 
   </body>
 </html>
