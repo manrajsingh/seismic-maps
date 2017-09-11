@@ -182,6 +182,7 @@ function geocodeAddress(geocoder, resultsMap, searchMarker) {
 
 
 function displayInfo(goog,usgs){
+  usgsDate = new Date(usgs.request.date);
 
   lat = goog.geometry.location.lat();
   lng = goog.geometry.location.lng();
@@ -189,9 +190,18 @@ function displayInfo(goog,usgs){
   source = $("#result-template").html();
   template = Handlebars.compile(source);
   context = {
+    riskCategory: usgs.request.parameters.riskCategory,
+    siteClass: usgs.request.parameters.siteClass,
+    dateTime: usgsDate.toLocaleDateString() + " " + usgsDate.toLocaleTimeString(),
     result_count: result_count,
     formatted_address: goog.formatted_address,
     latlng: lat + ", " + lng,
+    ss: usgs.response.data.ss,
+    s1: usgs.response.data.s1,
+    s1rt: usgs.response.data.s1rt,
+    s1uh: usgs.response.data.s1uh,
+    s1d: usgs.response.data.s1d,
+    pgad: usgs.response.data.pgad,
     pga: usgs.response.data.pga,
     sds: usgs.response.data.sds,
     sd1: usgs.response.data.sd1,
@@ -213,10 +223,15 @@ function displayInfo(goog,usgs){
       error_key = key.replace("_error","");
       context[error_key] = usgs.response.data[key];
 
-      if(error_key == 'fv'){
-        context.sd1 = usgs.response.data[key];
-        context.sdc = usgs.response.data[key];
-        context.sm1 = usgs.response.data[key];
+      switch(error_key){
+        case 'fv':
+          context.sd1 = usgs.response.data[key];
+          context.sdc = usgs.response.data[key];
+          context.sm1 = usgs.response.data[key];
+          break;
+        case 'fa':
+          context.sms = usgs.response.data[key];
+          context.sds = usgs.response.data[key];
       }
     }
   }
