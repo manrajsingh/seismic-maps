@@ -141,11 +141,41 @@ function initMap() {
   });
 }
 
+function toggleDisclaimer(){
+  $("#disclaimer").toggle();
+  $("#disclaimer").get(0).scrollIntoView();
+}
+
+function displayErrorNotification(title,message){
+  $(".alerts-container").append('<div class="alert alert-danger" role="alert"><strong>' + title + "</strong><br>" + message + "</div>");
+}
+
+function clearErrorNotifications(){
+  $(".alerts-container > .alert-danger").remove();
+}
+
 function geocodeAddress(geocoder, resultsMap, searchMarker) {
-  $("#result").html('<div style="text-align:center; margin-top:20px;"><img src="https://loading.io/spinners/hourglass/lg.sandglass-time-loading-gif.gif"></div>');
+  clearErrorNotifications(); 
+  $("#result").html('').hide();
+  var address = $(".searchbox").val();
+
+  if(address.length < 3){
+    error_title = "Invalid Input";
+    error_message = "Please provie a valid address or a valid latitude, longitude.";
+    displayErrorNotification(error_title, error_message);
+    return;
+  }
+  if($("#site-class").val() == 'F'){
+    error_title = "Site Class: F";
+    error_message = "A site response analysis shall be performed in accordance with ASCE/SEI 7-16 section 21.1 for structures on Site Class F sites. If your structure is exempted under ASCE/SEI 7-16 Section 20.3.1, select a substitute site class.";
+    displayErrorNotification(error_title, error_message);
+    return; 
+  }
+
+
+  $("#result").html('<div style="text-align:center; margin-top:20px;"><img src="https://loading.io/spinners/hourglass/lg.sandglass-time-loading-gif.gif"></div>').show();
   $(".searchbox,.searchbutton").attr("disabled","disabled");
   $(".searchbutton").html("Searching ... ");
-  var address = $(".searchbox").val();
 
   geocoder.geocode({'address': address}, function(results, status) {
     if (status === 'OK') {
@@ -163,17 +193,25 @@ function geocodeAddress(geocoder, resultsMap, searchMarker) {
         url: 'https://earthquake.usgs.gov/ws/designmaps/asce7-16.json',
         data: {latitude:lat, longitude: lng, riskCategory: riskCategory, siteClass: siteClass, title: "Seismic Maps"},
         success: function(data){
-          displayInfo(results[0],data);
+          if(data.request.status == "success"){
+            displayInfo(results[0],data);
+          }
+          else{
+             displayErrorNotification("USGS service returned the following error", data.response);
+          }
+          $(".searchbox,.searchbutton").removeAttr("disabled");
+          $(".searchbutton").html("Search");
         },
-        fail: function(jqXHR, textStatus, errorThrown){
-          alert(errorThrown);
+        error: function(data){
+          displayErrorNotification("USGS service returned the following error", data.status + " " + data.statusText + "<br>" + data.responseJSON.response );
+          $("#result").html('').hide();
+          $(".searchbox,.searchbutton").removeAttr("disabled");
+          $(".searchbutton").html("Search");
         },
       });
-      $(".searchbox,.searchbutton").removeAttr("disabled");
-      $(".searchbutton").html("Search");
 
     } else {
-      alert('Geocode was not successful for the following reason: ' + status);
+      displayErrorNotification('Geocode was not successful for the following reason: ', status);
       $(".searchbox,.searchbutton").removeAttr("disabled");
       $(".searchbutton").html("Search");
     }
