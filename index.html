@@ -16,6 +16,25 @@
         .card { border: 0px; }
         table { width: 100%; }
       }
+      /* Sticky footer styles
+      -------------------------------------------------- */
+      html {
+        position: relative;
+        min-height: 100%;
+      }
+      body {
+        /* Margin bottom by footer height */
+        margin-bottom: 60px;
+      }
+      .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        /* Set the fixed height of the footer here */
+        height: 45px;
+        line-height: 45px; /* Vertically center the text there */
+        background-color: #f5f5f5;
+      }
     </style>
   </head>
   <body>
@@ -66,7 +85,6 @@
     </nav>
     <div class="jumbotron">
       <div id="map"></div>
-      </div>
     </div>
     <div class="container">
       <div class="alerts-container">
@@ -107,6 +125,7 @@
             </span>
           </div>
         </div>
+      </div>
       <!-- Results -->
       <div id="result"></div>
 
@@ -178,13 +197,31 @@
         </div>
       </script>
       <hr/>
-      <footer class="footer">
-        <div class="text-center"><a href="javascript: toggleDisclaimer()"><strong>Disclaimer</strong></a></div>
-        <p id="disclaimer" style="display: none; text-indent: 50px;">
-While the information presented on this website is believed to be correct, <abbr title="Structural Engineers Association of California">SEAOC</abbr> and its sponsors and contributors assume no responsibility or liability for its accuracy. The material presented in this web application should not be used or relied upon for any specific application without competent examination and verification of its accuracy, suitability and applicability by engineers or other licensed professionals. SEAOC does not intend that the use of this information replace the sound judgment of such competent professionals, having experience and knowledge in the field of practice, nor to substitute for the standard of care required of such professionals in interpreting and applying the results of the ASCE 7-16 seismic data provided by this website. Users of the information from this website assume all liability arising from such use. Use of the output of this website does not imply approval by the governing building code bodies responsible for building code approval and interpretation for the building site described by latitude/longitude location in the search results of this webstie.</p>
-      </footer>
-
     </div><!-- /.container -->
+    <footer class="footer">
+        <div class="text-center"><a href="javascript: void(0);" data-toggle="modal" data-target="#disclaimer"><strong>Disclaimer</strong></a></div>
+        <!-- Modal -->
+        <div class="modal fade" id="disclaimer" tabindex="-1" role="dialog" aria-labelledby="Disclaimer" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Disclaimer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p style="text-indent: 25px; line-height: 25px;">While the information presented on this website is believed to be correct, <abbr title="Structural Engineers Association of California">SEAOC</abbr> and its sponsors and contributors assume no responsibility or liability for its accuracy. The material presented in this web application should not be used or relied upon for any specific application without competent examination and verification of its accuracy, suitability and applicability by engineers or other licensed professionals. SEAOC does not intend that the use of this information replace the sound judgment of such competent professionals, having experience and knowledge in the field of practice, nor to substitute for the standard of care required of such professionals in interpreting and applying the results of the ASCE 7-16 seismic data provided by this website. Users of the information from this website assume all liability arising from such use. Use of the output of this website does not imply approval by the governing building code bodies responsible for building code approval and interpretation for the building site described by latitude/longitude location in the search results of this webstie.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Modal -->
+
+      </footer>
 
 
 

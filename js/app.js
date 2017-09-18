@@ -141,11 +141,6 @@ function initMap() {
   });
 }
 
-function toggleDisclaimer(){
-  $("#disclaimer").toggle();
-  $("#disclaimer").get(0).scrollIntoView();
-}
-
 function displayErrorNotification(title,message){
   $(".alerts-container").append('<div class="alert alert-danger" role="alert"><strong>' + title + "</strong><br>" + message + "</div>");
 }
