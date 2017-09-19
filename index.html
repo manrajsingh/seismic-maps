@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>ASCE 7-16 | Seismic Maps</title>
+    <title>Seismic Design Maps</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -40,7 +40,7 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a class="navbar-brand" href="/seismic-maps/">ASCE 7-16 Seismic Maps</a>
+        <a class="navbar-brand" href="/seismic-maps/"><img src="img/seaoc-logo.png" style="width:50px; margin-right:10px;" />Seismic Design Maps</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -93,7 +93,14 @@
       <div class="search-container">
         <h3>Search for Address or Coordinates (lat,long)</h3> &nbsp;
         <div class="row">
-            <div class="input-group col-6">
+            <div class="input-group col-4">
+              <span class="input-group-addon" id="btnGroupAddon">Reference Document <span class="glyphicons glyphicons-arrow-right"></span></span>
+              <select class="form-control" aria-describedby="btnGroupAddon" id="dcrd">
+                <option value="asce7-16">2016 ASCE 7</option>
+                <option value="asce7-10">2010 ASCE 7</option>
+              </select>
+            </div>
+            <div class="input-group col-4">
               <span class="input-group-addon" id="btnGroupAddon">Risk Category <span class="glyphicons glyphicons-arrow-right"></span></span>
               <select class="form-control" aria-describedby="btnGroupAddon" id="risk-category">
                 <option value="I">I</option>
@@ -102,7 +109,7 @@
                 <option value="IV">IV</option>
               </select>
             </div>
-            <div class="input-group col-6">
+            <div class="input-group col-4">
               <span class="input-group-addon" id="btnGroupAddon">Site Class <span class="glyphicons glyphicons-arrow-right"></span></span>
               <select class="form-control" id="site-class" aria-describedby="btnGroupAddon">
                 <option value="A">A - Hard Rock</option>
@@ -139,6 +146,7 @@
             <table class="table table-striped table-hover table-responsive table-sm table-bordered">
               <tbody>
                 <tr><th>Date</th><td>{{dateTime}}</td></tr>
+                <tr><th>Design Code Reference Document</th><td>{{dcrd}}</td></tr>
                 <tr><th>Risk Category</th><td>{{riskCategory}}</td></tr>
                 <tr><th>Site Class</th><td>{{siteClass}}</td></tr>
               </tbody>

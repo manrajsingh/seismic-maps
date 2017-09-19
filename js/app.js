@@ -180,12 +180,14 @@ function geocodeAddress(geocoder, resultsMap, searchMarker) {
       lat = results[0].geometry.location.lat();
       lng = results[0].geometry.location.lng();
 
+      dcrd = $("#dcrd").val();
+
       riskCategory = $("#risk-category").val();
       siteClass = $("#site-class").val();
       $.ajax({
         method: 'GET',
         dataType: 'json',
-        url: 'https://earthquake.usgs.gov/ws/designmaps/asce7-16.json',
+        url: 'https://earthquake.usgs.gov/ws/designmaps/'+ dcrd +'.json',
         data: {latitude:lat, longitude: lng, riskCategory: riskCategory, siteClass: siteClass, title: "Seismic Maps"},
         success: function(data){
           if(data.request.status == "success"){
@@ -223,6 +225,7 @@ function displayInfo(goog,usgs){
   source = $("#result-template").html();
   template = Handlebars.compile(source);
   context = {
+    dcrd: usgs.request.referenceDocument,
     riskCategory: usgs.request.parameters.riskCategory,
     siteClass: usgs.request.parameters.siteClass,
     dateTime: usgsDate.toLocaleDateString() + " " + usgsDate.toLocaleTimeString(),
@@ -249,6 +252,12 @@ function displayInfo(goog,usgs){
     ssuh: usgs.response.data.ssuh,
     ssd: usgs.response.data.ssd
   };
+
+  $("#site-class option").each( function() {
+    if($(this).val() == usgs.request.parameters.siteClass) {
+      context.siteClass = $(this).html();
+    }
+  });
 
   for(key in usgs.response.data)
   {
