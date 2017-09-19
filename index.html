@@ -38,9 +38,9 @@
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
-        <a class="navbar-brand" href="/seismic-maps/"><img src="img/seaoc-logo.png" style="width:50px; margin-right:10px;" />Seismic Design Maps</a>
+        <a class="navbar-brand" href="/seismic-maps/"><img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/seaoc-logo.png" style="width:50px; margin-right:5px;" /> <img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/oshpd-logo.jpg" style="width:75px; margin-right:10px;" /> Seismic Design Maps</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -93,14 +93,14 @@
       <div class="search-container">
         <h3>Search for Address or Coordinates (lat,long)</h3> &nbsp;
         <div class="row">
-            <div class="input-group col-4">
-              <span class="input-group-addon" id="btnGroupAddon">Reference Document <span class="glyphicons glyphicons-arrow-right"></span></span>
+            <div class="input-group col-md-4">
+              <span class="input-group-addon" id="btnGroupAddon">Reference<span class="glyphicons glyphicons-arrow-right"></span></span>
               <select class="form-control" aria-describedby="btnGroupAddon" id="dcrd">
-                <option value="asce7-16">2016 ASCE 7</option>
-                <option value="asce7-10">2010 ASCE 7</option>
+                <option value="asce7-16">ASCE 7-16</option>
+                <option value="asce7-10">ASCE 7-10</option>
               </select>
             </div>
-            <div class="input-group col-4">
+            <div class="input-group col-md-4">
               <span class="input-group-addon" id="btnGroupAddon">Risk Category <span class="glyphicons glyphicons-arrow-right"></span></span>
               <select class="form-control" aria-describedby="btnGroupAddon" id="risk-category">
                 <option value="I">I</option>
@@ -109,15 +109,15 @@
                 <option value="IV">IV</option>
               </select>
             </div>
-            <div class="input-group col-4">
+            <div class="input-group col-md-4">
               <span class="input-group-addon" id="btnGroupAddon">Site Class <span class="glyphicons glyphicons-arrow-right"></span></span>
               <select class="form-control" id="site-class" aria-describedby="btnGroupAddon">
                 <option value="A">A - Hard Rock</option>
                 <option value="B">B - Rock</option>
-                <option value="B-estimated">B - Estimated (see Section 11.4.3)</option>
+                <option invisible-at="asce7-10" value="B-estimated">B - Estimated (see Section 11.4.3)</option>
                 <option value="C">C - Very Dense Soil and Soft Rock</option>
                 <option value="D">D - Stiff Soil</option>
-                <option value="D-default">D - Default (See Section 11.4.3)</option>
+                <option invisible-at="asce7-10" value="D-default">D - Default (See Section 11.4.3)</option>
                 <option value="E">E - Soft Clay Soil</option>
                 <option value="F">F - Site Response Analysis</option>
               </select>

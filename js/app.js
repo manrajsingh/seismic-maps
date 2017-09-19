@@ -117,6 +117,18 @@ $(".searchbox").keyup(function(e){
   $(".searchbox").val($(this).val());
 });
 
+$("#dcrd").change(function(){
+  
+  $("#site-class option").each(function(){
+    if($(this).attr("invisible-at") == $("#dcrd").val()){
+      $(this).hide();
+    }
+    else{
+      $(this).show();
+    }
+  });
+})
+
 function initMap() {
   // Create the map with no initial style specified.
   // It therefore has default styling.
