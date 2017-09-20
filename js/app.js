@@ -127,6 +127,7 @@ $("#dcrd").change(function(){
       $(this).show();
     }
   });
+  $('#site-class option:nth-child(1)').prop('selected', true);
 })
 
 function initMap() {
