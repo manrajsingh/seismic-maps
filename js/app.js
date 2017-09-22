@@ -204,7 +204,7 @@ function geocodeAddress(geocoder, resultsMap, searchMarker) {
   }
   if($("#site-class").val() == 'F'){
     error_title = "Site Class: F";
-    error_message = "A site response analysis shall be performed in accordance with ASCE/SEI 7-16 section 21.1 for structures on Site Class F sites. If your structure is exempted under ASCE/SEI 7-16 Section 20.3.1, select a substitute site class.";
+    error_message = "A site response analysis shall be performed in accordance with ASCE/SEI 7 section 21.1 for structures on Site Class F sites. If your structure is exempted under ASCE/SEI 7 Section 20.3.1, select a substitute site class.";
     displayErrorNotification(error_title, error_message);
     return; 
   }
