@@ -180,10 +180,19 @@ function initMap() {
     zoom: 16,
     mapTypeControl: false
   });
-
+ 
   map.setOptions({styles: styles['retro']});
   var geocoder = new google.maps.Geocoder();
-  var searchMarker = new google.maps.Marker({ map: map, animation: google.maps.Animation.DROP, draggable: true, });
+  //var searchMarker = new google.maps.Marker({ map: map, animation: google.maps.Animation.DROP, draggable: true, });
+  $('<div/>').addClass('centerMarker').appendTo(map.getDiv())
+
+  google.maps.event.addListener(map, 'idle', function() {
+    $("#coords-display-lat").html("Latitude: " + map.getCenter().lat());
+    $("#coords-display-lng").html("Longitude: " + map.getCenter().lng());
+  });
+
+ 
+
 
   $('.searchbutton').click(function() {
     geocodeAddress(geocoder, map, searchMarker);
