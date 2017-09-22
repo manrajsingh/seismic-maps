@@ -113,22 +113,51 @@ var styles = {
           }
         ]};
 
+(function(options = {
+  siteClassSelector: "#site-class",
+  referenceDocumentSelector: "#dcrd"
+}){ 
+  siteClasses = [
+    { name: 'A - Hard Rock', value: 'A' },
+    { name: 'B - Rock', value: 'B' },
+    { name: 'B - Estimated (see Section 11.4.3)', value: 'B-estimated', hide_in_ref: ['asce7-10'] },
+    { name: 'C - Very Dense Soil and Soft Rock', value: 'C' },
+    { name: 'D - Stiff Soil', value: 'D', hide_in_ref: ['asce7-10'] },
+    { name: 'D - Default (See Section 11.4.3)', value: 'D-default' },
+    { name: 'E - Soft Clay Soil', value: 'E' },
+    { name: 'F - Site Response Analysis', value: 'F' }
+  ];
+
+  var update_view = function(){
+    selector = options.siteClassSelector;
+    ref = $(options.referenceDocumentSelector).val();
+
+    $(selector + " option").remove();
+    siteClasses.forEach(function(i) {
+      if(typeof i.hide_in_ref == 'undefined'){
+        $(selector).append('<option value="'+i.value+'">'+i.name+'</option>');
+      }
+      else{
+        if(i.hide_in_ref.indexOf(ref) == -1){
+          $(selector).append('<option value="'+i.value+'">'+i.name+'</option>');
+        }
+      }
+    });
+    $(selector + ' option:nth-child(1)').prop('selected', true);
+  };update_view();
+
+  //listners
+  $(options.referenceDocumentSelector).change(function (){
+    update_view();
+  });
+})();
+
+
+
 $(".searchbox").keyup(function(e){
   $(".searchbox").val($(this).val());
 });
 
-$("#dcrd").change(function(){
-  
-  $("#site-class option").each(function(){
-    if($(this).attr("invisible-at") == $("#dcrd").val()){
-      $(this).hide();
-    }
-    else{
-      $(this).show();
-    }
-  });
-  $('#site-class option:nth-child(1)').prop('selected', true);
-})
 
 function initMap() {
   // Create the map with no initial style specified.
@@ -313,22 +342,20 @@ function displayInfo(goog,usgs){
 
 function make_chart(elm,chartData,chartTitle)
 {
-      google.charts.load('current', {'packages':['corechart','line']});
-      google.charts.setOnLoadCallback(drawChart);
+  google.charts.load('current', {'packages':['corechart','line']});
+  google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable(chartData);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(chartData);
+    var options = {
+      title: chartTitle,
+      vAxis: { title: 'Sa(g)'},
+      hAxis : {title: 'Period, T (sec)'},
+      legend: {'position': 'bottom' }
+    };
 
-        var options = {
-          title: chartTitle,
-          vAxis: { title: 'Sa(g)'},
-          hAxis : {title: 'Period, T (sec)'},
-          legend: {'position': 'bottom' }
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById(elm));
-
-        chart.draw(data, options);
-      }
+    var chart = new google.visualization.LineChart(document.getElementById(elm));
+    chart.draw(data, options);
+  }
 
 }
