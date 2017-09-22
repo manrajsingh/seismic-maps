@@ -113,17 +113,27 @@ var styles = {
           }
         ]};
 
-(function(options = {
-  siteClassSelector: "#site-class",
-  referenceDocumentSelector: "#dcrd"
-}){ 
+(function(options){ 
+  
+  if(typeof options === 'undefined'){
+    options = {
+      siteClassSelector: "#site-class",
+      referenceDocumentSelector: "#dcrd"
+    }
+  }
+  else{
+    options.siteClassSelector = (typeof options.siteClassSelector === undefined || options.siteClassSelector == null || options.siteClassSelector == '')?'#site-class':options.siteClassSelector;
+    options.referenceDocumentSelector = (typeof options.referenceDocumentSelector === undefined || options.referenceDocumentSelector == null || options.referenceDocumentSelector == '')?'#dcrd':options.referenceDocumentSelector;
+
+  }
+
   siteClasses = [
     { name: 'A - Hard Rock', value: 'A' },
     { name: 'B - Rock', value: 'B' },
     { name: 'B - Estimated (see Section 11.4.3)', value: 'B-estimated', hide_in_ref: ['asce7-10'] },
     { name: 'C - Very Dense Soil and Soft Rock', value: 'C' },
-    { name: 'D - Stiff Soil', value: 'D', hide_in_ref: ['asce7-10'] },
-    { name: 'D - Default (See Section 11.4.3)', value: 'D-default' },
+    { name: 'D - Stiff Soil', value: 'D' },
+    { name: 'D - Default (See Section 11.4.3)', value: 'D-default', hide_in_ref: ['asce7-10'] },
     { name: 'E - Soft Clay Soil', value: 'E' },
     { name: 'F - Site Response Analysis', value: 'F' }
   ];
@@ -144,10 +154,13 @@ var styles = {
       }
     });
     $(selector + ' option:nth-child(1)').prop('selected', true);
-  };update_view();
+  };
 
   //listners
   $(options.referenceDocumentSelector).change(function (){
+    update_view();
+  });
+  $(document).ready(function(){
     update_view();
   });
 })();
