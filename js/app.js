@@ -153,7 +153,7 @@ var styles = {
         }
       }
     });
-    $(selector + ' option:nth-child(1)').prop('selected', true);
+    $(selector + ' option[value="D"]').prop('selected', true);
   };
 
   //listners
@@ -183,24 +183,35 @@ function initMap() {
  
   map.setOptions({styles: styles['retro']});
   var geocoder = new google.maps.Geocoder();
-  //var searchMarker = new google.maps.Marker({ map: map, animation: google.maps.Animation.DROP, draggable: true, });
+  
   $('<div/>').addClass('centerMarker').appendTo(map.getDiv())
+
+  map_dragged = false;
+
+  google.maps.event.addListener(map, 'drag', function() {
+    $("#coords-display-lat").html("Latitude: " + map.getCenter().lat());
+    $("#coords-display-lng").html("Longitude: " + map.getCenter().lng());
+    map_dragged = true;
+  });
 
   google.maps.event.addListener(map, 'idle', function() {
     $("#coords-display-lat").html("Latitude: " + map.getCenter().lat());
     $("#coords-display-lng").html("Longitude: " + map.getCenter().lng());
+    if(map_dragged){
+      $(".searchbox").val(map.getCenter().lat()+","+map.getCenter().lng());
+      map_dragged = false;
+    }
   });
-
  
 
 
   $('.searchbutton').click(function() {
-    geocodeAddress(geocoder, map, searchMarker);
+    geocodeAddress(geocoder, map);
   });
   $('.searchbox').keypress(function(e) {
     var key = e.which || e.keyCode;
     if (key === 13) {
-      geocodeAddress(geocoder, map, searchMarker);
+      geocodeAddress(geocoder, map);
     }
   });
 }
@@ -213,7 +224,7 @@ function clearErrorNotifications(){
   $(".alerts-container > .alert-danger").remove();
 }
 
-function geocodeAddress(geocoder, resultsMap, searchMarker) {
+function geocodeAddress(geocoder, resultsMap) {
   clearErrorNotifications(); 
   $("#result").html('').hide();
   var address = $(".searchbox").val();
@@ -231,31 +242,49 @@ function geocodeAddress(geocoder, resultsMap, searchMarker) {
     return; 
   }
 
-
   $("#result").html('<div style="text-align:center; margin-top:20px;"><img src="https://loading.io/spinners/hourglass/lg.sandglass-time-loading-gif.gif"></div>').show();
   $(".searchbox,.searchbutton").attr("disabled","disabled");
   $(".searchbutton").html("Searching ... ");
 
-  geocoder.geocode({'address': address}, function(results, status) {
-    if (status === 'OK') {
-      resultsMap.setCenter(results[0].geometry.location);
-      searchMarker.setPosition(results[0].geometry.location);
+  if(address.search(/[a-zA-Z]/) < 0 && address.search(",") > 0 ){
+    //Input is lat lng
+    addressParts = address.split(',');
+    lat = addressParts[0].trim();
+    lng = addressParts[1].trim();
+    formatted_address = "";
+    usgs_seismic_info(lat, lng, formatted_address);
+  }
+  else
+  {
+    geocoder.geocode({'address': address}, function(results, status) {
+      if (status === 'OK') {
+        resultsMap.setCenter(results[0].geometry.location);
+        lat = results[0].geometry.location.lat();
+        lng = results[0].geometry.location.lng();
+        usgs_seismic_info(lat, lng, results[0].formatted_address);
 
-      lat = results[0].geometry.location.lat();
-      lng = results[0].geometry.location.lng();
+      }
+      else {
+        displayErrorNotification('Geocode was not successful for the following reason: ', status);
+        $(".searchbox,.searchbutton").removeAttr("disabled");
+        $(".searchbutton").html("Search");
+      }
+    });
+  }
+}
 
-      dcrd = $("#dcrd").val();
-
-      riskCategory = $("#risk-category").val();
-      siteClass = $("#site-class").val();
-      $.ajax({
+function usgs_seismic_info(lat, lng, formatted_address){
+  dcrd = $("#dcrd").val();
+  riskCategory = $("#risk-category").val();
+  siteClass = $("#site-class").val();
+  $.ajax({
         method: 'GET',
         dataType: 'json',
         url: 'https://earthquake.usgs.gov/ws/designmaps/'+ dcrd +'.json',
         data: {latitude:lat, longitude: lng, riskCategory: riskCategory, siteClass: siteClass, title: "Seismic Maps"},
         success: function(data){
           if(data.request.status == "success"){
-            displayInfo(results[0],data);
+            displayInfo(lat, lng, formatted_address, data);
           }
           else{
              displayErrorNotification("USGS service returned the following error", data.response);
@@ -270,21 +299,11 @@ function geocodeAddress(geocoder, resultsMap, searchMarker) {
           $(".searchbutton").html("Search");
         },
       });
-
-    } else {
-      displayErrorNotification('Geocode was not successful for the following reason: ', status);
-      $(".searchbox,.searchbutton").removeAttr("disabled");
-      $(".searchbutton").html("Search");
-    }
-  });
 }
 
 
-function displayInfo(goog,usgs){
+function displayInfo(lat,lng,formatted_address, usgs){
   usgsDate = new Date(usgs.request.date);
-
-  lat = goog.geometry.location.lat();
-  lng = goog.geometry.location.lng();
   result_count =  $("#result > div").length;
   source = $("#result-template").html();
   template = Handlebars.compile(source);
@@ -292,9 +311,9 @@ function displayInfo(goog,usgs){
     dcrd: usgs.request.referenceDocument,
     riskCategory: usgs.request.parameters.riskCategory,
     siteClass: usgs.request.parameters.siteClass,
-    dateTime: usgsDate.toLocaleDateString() + " " + usgsDate.toLocaleTimeString(),
+    dateTime: usgsDate.toLocaleDateString() + ", " + usgsDate.toLocaleTimeString(),
     result_count: result_count,
-    formatted_address: goog.formatted_address,
+    formatted_address: formatted_address,
     latlng: lat + ", " + lng,
     ss: usgs.response.data.ss,
     s1: usgs.response.data.s1,
