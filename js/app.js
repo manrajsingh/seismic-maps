@@ -189,21 +189,20 @@ function initMap() {
   map_dragged = false;
 
   google.maps.event.addListener(map, 'drag', function() {
-    $("#coords-display-lat").html("Latitude: " + map.getCenter().lat());
-    $("#coords-display-lng").html("Longitude: " + map.getCenter().lng());
+    $("#coords-display-lat").html("Lat: " + map.getCenter().lat().toFixed(8));
+    $("#coords-display-lng").html("Lng: " + map.getCenter().lng().toFixed(8));
     map_dragged = true;
   });
 
   google.maps.event.addListener(map, 'idle', function() {
-    $("#coords-display-lat").html("Latitude: " + map.getCenter().lat());
-    $("#coords-display-lng").html("Longitude: " + map.getCenter().lng());
+    $("#coords-display-lat").html("Lat: " + map.getCenter().lat().toFixed(8));
+    $("#coords-display-lng").html("Lng: " + map.getCenter().lng().toFixed(8));
     if(map_dragged){
-      $(".searchbox").val(map.getCenter().lat()+","+map.getCenter().lng());
+      $(".searchbox").val(map.getCenter().lat().toFixed(8) + ", " + map.getCenter().lng().toFixed(8));
       map_dragged = false;
     }
   });
  
-
 
   $('.searchbutton').click(function() {
     geocodeAddress(geocoder, map);
@@ -252,6 +251,7 @@ function geocodeAddress(geocoder, resultsMap) {
     lat = addressParts[0].trim();
     lng = addressParts[1].trim();
     formatted_address = "";
+    map.setCenter({'lat': parseFloat(lat), 'lng': parseFloat(lng) });
     usgs_seismic_info(lat, lng, formatted_address);
   }
   else
