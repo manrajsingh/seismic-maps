@@ -189,14 +189,12 @@ function initMap() {
   map_dragged = false;
 
   google.maps.event.addListener(map, 'drag', function() {
-    $("#coords-display-lat").html("Lat: " + map.getCenter().lat().toFixed(8));
-    $("#coords-display-lng").html("Lng: " + map.getCenter().lng().toFixed(8));
+    $("#coords-display").html("Lat: " + map.getCenter().lat().toFixed(8) +", Lng: " + map.getCenter().lng().toFixed(8));
     map_dragged = true;
   });
 
   google.maps.event.addListener(map, 'idle', function() {
-    $("#coords-display-lat").html("Lat: " + map.getCenter().lat().toFixed(8));
-    $("#coords-display-lng").html("Lng: " + map.getCenter().lng().toFixed(8));
+    $("#coords-display").html("Lat: " + map.getCenter().lat().toFixed(8) +", Lng: " + map.getCenter().lng().toFixed(8));
     if(map_dragged){
       $(".searchbox").val(map.getCenter().lat().toFixed(8) + ", " + map.getCenter().lng().toFixed(8));
       map_dragged = false;
