@@ -35,6 +35,23 @@
         line-height: 45px; /* Vertically center the text there */
         background-color: #f5f5f5;
       }
+
+      /* map style marker */
+      #map .centerMarker{
+      position:absolute;
+      /*url of the marker*/
+      background:url(http://maps.gstatic.com/mapfiles/markers2/marker.png) no-repeat;
+      /*center the marker*/
+      top:50%;left:50%;
+      z-index:1;
+      /*fix offset when needed*/
+      margin-left:-10px;
+      margin-top:-34px;
+      /*size of the image*/
+      height:34px;
+      width:20px;
+      cursor:pointer;
+    }
     </style>
   </head>
   <body>
@@ -85,6 +102,10 @@
     </nav>
     <div class="jumbotron">
       <div id="map"></div>
+      <div class="row">
+        <div class="col-md-6" id="coords-display-lat" style="text-align: right"></div>
+        <div class="col-md-6" id="coords-display-lng"></div>
+      </div>
     </div>
     <div class="container">
       <div class="alerts-container">
