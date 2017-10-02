@@ -302,7 +302,6 @@ function usgs_seismic_info(lat, lng, formatted_address){
 
 function displayInfo(lat,lng,formatted_address, usgs){
   usgsDate = new Date(usgs.request.date);
-  result_count =  $("#result > div").length;
   source = $("#result-template").html();
   template = Handlebars.compile(source);
   context = {
@@ -310,7 +309,6 @@ function displayInfo(lat,lng,formatted_address, usgs){
     riskCategory: usgs.request.parameters.riskCategory,
     siteClass: usgs.request.parameters.siteClass,
     dateTime: usgsDate.toLocaleDateString() + ", " + usgsDate.toLocaleTimeString(),
-    result_count: result_count,
     formatted_address: formatted_address,
     latlng: lat + ", " + lng,
     ss: usgs.response.data.ss,
@@ -364,11 +362,11 @@ function displayInfo(lat,lng,formatted_address, usgs){
 
   if(usgs.response.data.sdSpectrum != null){
     sd_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.sdSpectrum);
-    make_chart("sd_chart_" + result_count, sd_data, "Design Response Spectrum");
+    make_chart("sd_chart", sd_data, "Design Response Spectrum");
   }
   if(usgs.response.data.smSpectrum != null){
     sm_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.smSpectrum);
-    make_chart("sm_chart_" + result_count, sm_data, "MCER Response Spectrum");
+    make_chart("sm_chart", sm_data, "MCER Response Spectrum");
   }
   if(usgs.response.data.smSpectrum == null && usgs.response.data.sdSpectrum == null) {
     $(".spectrum-charts").hide();

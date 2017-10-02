@@ -52,6 +52,8 @@
       width:20px;
       cursor:pointer;
     }
+
+    .spectrum-charts { height: 300px; }
     </style>
   </head>
   <body>
@@ -154,7 +156,7 @@
         <div class="card mt-5">
           <div class="card-body">
             <h4 class="card-title">{{formatted_address}}</h4>
-            <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude:{{latlng}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
             <div>&nbsp;</div>
 
             <table class="table table-striped table-hover table-responsive table-sm table-bordered">
@@ -206,11 +208,11 @@
             </table>
 
             <div class="row">
-              <div class="col-md-6 spectrum-charts">
-                <div id="sm_chart_{{result_count}}"></div>
+              <div class="col-md-6">
+                <div id="sm_chart" class="spectrum-charts"></div>
               </div>
-              <div class="col-md-6 spectrum-charts">
-                <div id="sd_chart_{{result_count}}"></div>
+              <div class="col-md-6">
+                <div id="sd_chart" class="spectrum-charts"></div>
               </div>
             </div>
             <!--a href="#" class="card-link">Card link</a>
