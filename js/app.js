@@ -340,8 +340,8 @@ function displayInfo(lat,lng,formatted_address, usgs){
 
   for(key in usgs.response.data)
   {
-    if(key.indexOf("_error")>0){
-      error_key = key.replace("_error","");
+    if(key.indexOf("_note")>0){
+      error_key = key.replace("_note","");
       context[error_key] = usgs.response.data[key];
 
       switch(error_key){
