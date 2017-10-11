@@ -347,13 +347,15 @@ function displayInfo(lat,lng,formatted_address, usgs){
 
       switch(error_key){
         case 'fv':
-          context.sd1 = usgs.response.data[key];
-          context.sdc = usgs.response.data[key];
-          context.sm1 = usgs.response.data[key];
+          context.sd1 = usgs.response.data.sd1 + '  -' + usgs.response.data[key];
+          context.sdc = usgs.response.data.sdc + '  -' + usgs.response.data[key];
+          context.sm1 = usgs.response.data.sm1 + '  -' + usgs.response.data[key];
+		      context.fv = usgs.response.data.fv + '  -' + usgs.response.data[key];
           break;
         case 'fa':
-          context.sms = usgs.response.data[key];
-          context.sds = usgs.response.data[key];
+          context.sms = usgs.response.data.sms +'  -'+ usgs.response.data[key];
+          context.sds = usgs.response.data.sds +'  -'+ usgs.response.data[key];
+		      context.fa = usgs.response.data.fa +'  -'+ usgs.response.data[key];
       }
     }
   }
