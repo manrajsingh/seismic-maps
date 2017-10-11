@@ -9,20 +9,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <style type="text/css">
-      #map { display: block; width: 100%; height: 300px; }
-      .jumbotron { padding: 0px; }
-      
-       <!-- added to enable map printing to CSS-->
-      img { 
-    max-width: none !important; 
-} 
-       <!-- ---- CSS -->
-      
-      @media print {
-        .search-container, #map { display: none; }
-        .card { border: 0px; }
-        table { width: 100%; }
-      }
+    #map { display: block; width: 100%; height: 300px; }
+    .jumbotron { padding: 0px; }
       /* Sticky footer styles
       -------------------------------------------------- */
       html {
@@ -62,6 +50,7 @@
 
     .spectrum-charts { height: 300px; }
     </style>
+    <link rel="stylesheet" media="print" href="css/print.css" />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -130,14 +119,9 @@
                 <option value="asce7-16">ASCE 7-16</option>
                 <option value="asce7-10">ASCE 7-10</option>
                 <option value="nehrp-2015">NEHRP-2015</option>
-		            <option value="nehrp-2009">NEHRP-2009</option>
-		            <option value="ibc-2015">IBC-2015</option>
-		            <option value="ibc-2012">IBC-2012</option>
-                
-                
-                
-                
-                
+                <option value="nehrp-2009">NEHRP-2009</option>
+                <option value="ibc-2015">IBC-2015</option>
+                <option value="ibc-2012">IBC-2012</option>
               </select>
             </div>
             <div class="input-group col-md-4">
@@ -157,8 +141,11 @@
         </div>
         &nbsp;
         <div class="row">
-          <div class="input-group col-12">
-            <input type="text" class="form-control input-group searchbox" placeholder="Search Address or Lat,Long" aria-label="Search for...">
+          <div class="input-group col-md-4">
+            <input type="text" id="project-title" class="form-control" placeholder="Project Title (optional)" aria-label="Project Title (optional)">
+          </div>
+          <div class="input-group col-md-8">
+            <input type="text" class="form-control input-group searchbox" placeholder="Search Address or Lat,Long" aria-label="Search Address or Lat, Long">
             <span class="input-group-btn">
               <button class="btn btn-primary searchbutton" type="button">Search</button>
             </span>
@@ -171,58 +158,63 @@
       <script id="result-template" type="text/x-handlebars-template">
         <div class="card mt-5">
           <div class="card-body">
-            <h4 class="card-title">{{formatted_address}}</h4>
+            <h3 class="card-title">{{project_title}}</h3>
+            <h5>{{formatted_address}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
-            <div>&nbsp;</div>
+            <div class="row">
+              <div class="col-md-12">
+                <table class="d-print-block table table-striped table-hover table-responsive table-sm table-bordered" data-show-print="true">
+                  <tbody>
+                    <tr><th scope="row">Date</th><td>{{dateTime}}</td></tr>
+                    <tr><th scope="row">Design Code Reference Document</th><td>{{dcrd}}</td></tr>
+                    <tr><th scope="row">Risk Category</th><td>{{riskCategory}}</td></tr>
+                    <tr><th scope="row">Site Class</th><td>{{siteClass}}</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered">
+                  <thead>
+                    <tr><th>Type</th><th>Description</th><th>Value</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>S<sub>S</sub></td><td>MCE<sub>R</sub> ground motion. (for 0.2 second period)</td><td>{{ss}}</td></tr>
+                    <tr><td>S<sub>1</sub></td><td>MCE<sub>R</sub> ground motion. (for 1.0s period)</td><td>{{s1}}</td></tr>
+                    <tr><td>S<sub>MS</sub></td><td>Site-modified spectral acceleration value</td><td>{{sms}}</td></tr>
+                    <tr><td>S<sub>M1</sub></td><td>Site-modified spectral acceleration value</td><td>{{sm1}}</td></tr>
+                    <tr><td>S<sub>DS</sub></td><td>Numeric seismic design value at 0.2 second SA</td><td>{{sds}}</td></tr>
+                    <tr><td>S<sub>D1</sub></td><td>Numeric seismic design value at 1.0 second SA</td><td>{{sd1}}</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered">
+                  <thead>
+                    <tr><th>Type</th><th>Description</th><th>Value</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>SDC</td><td>Seismic design category</td><td>{{sdc}}</td></tr>
+                    <tr><td>f<sub>a</sub></td><td>Site amplification factor at 0.2 second</td><td>{{fa}}</td></tr>
+                    <tr><td>f<sub>v</sub></td><td>Site amplification factor at 1.0 second</td><td>{{fv}}</td></tr>
+                    <tr><td>PGA</td><td>MCEG peak ground acceleration</td><td>{{pga}}</td></tr>
+                    <tr><td>f<sub>pga</sub></td><td>Site amplification factor at PGA</td><td>{{fpga}}</td></tr>
+                    <tr><td>pgam</td><td>Site modified peak ground acceleration</td><td>{{pgam}}</td></tr>
+                    <tr><td>ssrt</td><td>Probabilistic risk-targeted ground motion. (0.2 second)</td><td>{{ssrt}}</td></tr>
+                    <tr><td>ssuh</td><td>Factored uniform-hazard (2% probability of exceedance in 50 years) spectral acceleration</td><td>{{ssuh}}</td></tr>
+                    <tr><td>ssd</td><td>Factored deterministic acceleration value. (0.2 second)</td><td>{{ssd}}</td></tr>
 
-            <table class="table table-striped table-hover table-responsive table-sm table-bordered">
-              <tbody>
-                <tr><th>Date</th><td>{{dateTime}}</td></tr>
-                <tr><th>Design Code Reference Document</th><td>{{dcrd}}</td></tr>
-                <tr><th>Risk Category</th><td>{{riskCategory}}</td></tr>
-                <tr><th>Site Class</th><td>{{siteClass}}</td></tr>
-              </tbody>
-            </table>
-
-
-            <table class="table table-striped table-hover table-responsive table-sm table-bordered">
-              <thead>
-                <tr><th>Type</th><th>Description</th><th>Value</th></tr>
-              </thead>
-              <tbody>
-
-                <tr><td>S<sub>S</sub></td><td>MCE<sub>R</sub> ground motion. (for 0.2 second period)</td><td>{{ss}}</td></tr>
-                <tr><td>S<sub>1</sub></td><td>MCE<sub>R</sub> ground motion. (for 1.0s period)</td><td>{{s1}}</td></tr>
-                <tr><td>S<sub>MS</sub></td><td>Site-modified spectral acceleration value</td><td>{{sms}}</td></tr>
-                <tr><td>S<sub>M1</sub></td><td>Site-modified spectral acceleration value</td><td>{{sm1}}</td></tr>
-                <tr><td>S<sub>DS</sub></td><td>Numeric seismic design value at 0.2 second SA</td><td>{{sds}}</td></tr>
-                <tr><td>S<sub>D1</sub></td><td>Numeric seismic design value at 1.0 second SA</td><td>{{sd1}}</td></tr>
-
-              </tbody>
-            </table>
-            &nbsp;
-            <table class="table table-striped table-hover table-responsive table-sm table-bordered">
-              <thead>
-                <tr><th>Type</th><th>Description</th><th>Value</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>SDC</td><td>Seismic design category</td><td>{{sdc}}</td></tr>
-                <tr><td>f<sub>a</sub></td><td>Site amplification factor at 0.2 second</td><td>{{fa}}</td></tr>
-                <tr><td>f<sub>v</sub></td><td>Site amplification factor at 1.0 second</td><td>{{fv}}</td></tr>
-                <tr><td>PGA</td><td>MCEG peak ground acceleration</td><td>{{pga}}</td></tr>
-                <tr><td>f<sub>pga</sub></td><td>Site amplification factor at PGA</td><td>{{fpga}}</td></tr>
-                <tr><td>pgam</td><td>Site modified peak ground acceleration</td><td>{{pgam}}</td></tr>
-                <tr><td>ssrt</td><td>Probabilistic risk-targeted ground motion. (0.2 second)</td><td>{{ssrt}}</td></tr>
-                <tr><td>ssuh</td><td>Factored uniform-hazard (2% probability of exceedance in 50 years) spectral acceleration</td><td>{{ssuh}}</td></tr>
-                <tr><td>ssd</td><td>Factored deterministic acceleration value. (0.2 second)</td><td>{{ssd}}</td></tr>
-
-                <tr><td>S1rt</td><td>Probabilistic risk-targeted ground motion. (1.0 second)</td><td>{{s1rt}}</td></tr>
-                <tr><td>S1uh</td><td>Factored uniform-hazard (2% probability of exceedance in 50 years) spectral acceleration.</td><td>{{s1uh}}</td></tr>
-                <tr><td>S1d</td><td>Factored deterministic acceleration value. (1.0 second)</td><td>{{s1d}}</td></tr>
-                <tr><td>Pgad</td><td>Factored deterministic acceleration value. (Peak Ground Acceleration)</td><td>{{pgad}}</td></tr>
-              </tbody>
-            </table>
-
+                    <tr><td>S1rt</td><td>Probabilistic risk-targeted ground motion. (1.0 second)</td><td>{{s1rt}}</td></tr>
+                    <tr><td>S1uh</td><td>Factored uniform-hazard (2% probability of exceedance in 50 years) spectral acceleration.</td><td>{{s1uh}}</td></tr>
+                    <tr><td>S1d</td><td>Factored deterministic acceleration value. (1.0 second)</td><td>{{s1d}}</td></tr>
+                    <tr><td>Pgad</td><td>Factored deterministic acceleration value. (Peak Ground Acceleration)</td><td>{{pgad}}</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
             <div class="row">
               <div class="col-md-6">
                 <div id="sm_chart" class="spectrum-charts"></div>
