@@ -1,5 +1,18 @@
 var map;
 
+var charts_config = {
+  sm:{
+    "title": "MCER Response Spectrum",
+    "data":[],
+    "target":"sm_chart"
+  },
+  sd:{
+    "title":"Design Response Spectrum",
+    "data":[],
+    "target":"sd_chart"
+  }
+};
+
 var styles = {
   default: null,
   retro: [
@@ -365,37 +378,39 @@ function displayInfo(lat,lng,formatted_address, usgs){
 
   if(usgs.response.data.sdSpectrum != null){
     sd_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.sdSpectrum);
-    make_chart("sd_chart", sd_data, "Design Response Spectrum");
+    charts_config.sd.data = sd_data;
   }
   if(usgs.response.data.smSpectrum != null){
     sm_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.smSpectrum);
-    make_chart("sm_chart", sm_data, "MCER Response Spectrum");
+    charts_config.sm.data = sm_data
   }
   if(usgs.response.data.smSpectrum == null && usgs.response.data.sdSpectrum == null) {
     $(".spectrum-charts").hide();
   }
   else{
+    makecharts();
     $(".spectrum-charts").show();
   }
 }
 
-
-function make_chart(elm,chartData,chartTitle)
+function makecharts()
 {
   google.charts.load('current', {'packages':['corechart','line']});
   google.charts.setOnLoadCallback(drawChart);
+}
 
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable(chartData);
-    var options = {
-      title: chartTitle,
+function drawChart() {
+  for( d in charts_config){
+    data = google.visualization.arrayToDataTable(charts_config[d].data);
+    options = {
+      title: charts_config[d].title,
       vAxis: { title: 'Sa(g)'},
       hAxis : {title: 'Period, T (sec)'},
       legend: {'position': 'bottom' }
     };
-
-    var chart = new google.visualization.LineChart(document.getElementById(elm));
+    chart = new google.visualization.LineChart(document.getElementById(charts_config[d].target));
+    chart_print = new google.visualization.LineChart(document.getElementById(charts_config[d].target+"_print"));
     chart.draw(data, options);
+    chart_print.draw(data, options);
   }
-
 }

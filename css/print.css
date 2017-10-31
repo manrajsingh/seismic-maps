@@ -1,3 +1,19 @@
-.alerts-container, .navbar, .search-container, .jumbotron, footer, hr { display: none; }
+.alerts-container, .navbar, .search-container, .jumbotron, footer, hr,.d-print-none { display: none; }
 .card { border: 0px; }
+html,body { font-family: arial; font-size: 10px }
+table { width: 100%; border:1px solid #ccc; margin-bottom: 5px;}
+td{ padding: 3px; }
+tr:nth-child(even) { background-color:#eee;}
 
+.col-md-6 { display:inline-block; }
+.text-muted {
+    color: #868e96!important; font-size: 14px; margin: 10px 0px;
+}
+.h5, h5 {
+    font-size: 18px;
+    margin:0px;
+}
+.h3, h3 {
+    font-size: 25px; margin-bottom: 5px; 
+}
+.spectrum-charts-print { height: 240px; width:350px; }
