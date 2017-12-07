@@ -167,7 +167,7 @@ var styles = {
       }
     });
     $(selector + ' option[value="D"]').prop('selected', true);
-    $(ref + ' option[value="asce7-10"]').prop('selected', true);
+    $(options.referenceDocumentSelector + ' option[value="asce7-10"]').prop('selected', true);
   };
 
   //listners
