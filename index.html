@@ -162,10 +162,10 @@
       <script id="result-template" type="text/x-handlebars-template">
         <div class="card mt-5">
           <div class="card-body">
-            <h3 class="card-title">{{project_title}} <button class="btn btn-primary d-print-none float-right" onclick="window.print()">Print</button></h3>
+            <h3 class="card-title">{{project_title}} <button class="btn btn-primary d-print-none float-right" onclick="print_map();">Print</button></h3>
             <h5>{{formatted_address}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
-            <div class="row d-none d-print-block">
+            <div class="row d-none d-print-block map-img">
               <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom=13&size=768x100&key=AIzaSyCSDT8WeSFn_3dLYBo5cTq6sUOQVE4o2Gg"></div>
             </div>
             <div class="row">

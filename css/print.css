@@ -1,4 +1,4 @@
-.alerts-container, .navbar, .search-container, .jumbotron, footer, hr,.d-print-none { display: none; }
+.navbar, .search-container, .jumbotron, footer, hr,.d-print-none { display: none; }
 .card { border: 0px; }
 html,body { font-family: arial; font-size: 10px }
 table { width: 100%; border:1px solid #ccc; margin-bottom: 5px;}
@@ -18,3 +18,5 @@ tr:nth-child(even) { background-color:#eee;}
     font-size: 25px; margin-bottom: 5px;
 }
 .spectrum-charts-print { height: 240px; width:350px; }
+
+.alert { color: #856404; text-align: center; background-color: #fff3cd; border-color: #ffeeba; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: .25rem;}

@@ -126,8 +126,8 @@ var styles = {
           }
         ]};
 
-(function(options){ 
-  
+(function(options){
+
   if(typeof options === 'undefined'){
     options = {
       siteClassSelector: "#site-class",
@@ -167,6 +167,7 @@ var styles = {
       }
     });
     $(selector + ' option[value="D"]').prop('selected', true);
+    $(ref + ' option[value="asce7-10"]').prop('selected', true);
   };
 
   //listners
@@ -193,10 +194,10 @@ function initMap() {
     zoom: 16,
     mapTypeControl: false
   });
- 
+
   map.setOptions({styles: styles['retro']});
   var geocoder = new google.maps.Geocoder();
-  
+
   $('<div/>').addClass('centerMarker').appendTo(map.getDiv())
 
   map_dragged = false;
@@ -206,6 +207,11 @@ function initMap() {
     map_dragged = true;
   });
 
+  google.maps.event.addListener(map, 'zoom_changed', function() {
+    src = $(".map-img img").attr("src");
+    $(".map-img img").attr("src",src.replace(/zoom=[0-9]+/, "zoom="+map.getZoom()));
+  });
+
   google.maps.event.addListener(map, 'idle', function() {
     $("#coords-display").html("Lat: " + map.getCenter().lat().toFixed(8) +", Lng: " + map.getCenter().lng().toFixed(8));
     if(map_dragged){
@@ -213,7 +219,7 @@ function initMap() {
       map_dragged = false;
     }
   });
- 
+
 
   $('.searchbutton').click(function() {
     geocodeAddress(geocoder, map);
@@ -235,7 +241,7 @@ function clearErrorNotifications(){
 }
 
 function geocodeAddress(geocoder, resultsMap) {
-  clearErrorNotifications(); 
+  clearErrorNotifications();
   $("#result").html('').hide();
   var address = $(".searchbox").val();
 
@@ -249,7 +255,7 @@ function geocodeAddress(geocoder, resultsMap) {
     error_title = "Site Class: F";
     error_message = "A site response analysis shall be performed in accordance with ASCE/SEI 7 section 21.1 for structures on Site Class F sites. If your structure is exempted under ASCE/SEI 7 Section 20.3.1, select a substitute site class.";
     displayErrorNotification(error_title, error_message);
-    return; 
+    return;
   }
 
   $("#result").html('<div style="text-align:center; margin-top:20px;"><img src="https://loading.io/spinners/hourglass/lg.sandglass-time-loading-gif.gif"></div>').show();
@@ -413,4 +419,8 @@ function drawChart() {
     chart.draw(data, options);
     chart_print.draw(data, options);
   }
+}
+
+function print_map(){
+    window.print();
 }
