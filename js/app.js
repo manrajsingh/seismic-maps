@@ -167,7 +167,6 @@ var styles = {
       }
     });
     $(selector + ' option[value="D"]').prop('selected', true);
-    $(options.referenceDocumentSelector + ' option[value="asce7-10"]').prop('selected', true);
   };
 
   //listners
@@ -175,6 +174,7 @@ var styles = {
     update_view();
   });
   $(document).ready(function(){
+    $(options.referenceDocumentSelector + ' option[value="asce7-10"]').prop('selected', true);
     update_view();
   });
 })();
@@ -208,8 +208,10 @@ function initMap() {
   });
 
   google.maps.event.addListener(map, 'zoom_changed', function() {
-    src = $(".map-img img").attr("src");
-    $(".map-img img").attr("src",src.replace(/zoom=[0-9]+/, "zoom="+map.getZoom()));
+    if($('.map-img img').length > 0) {
+      src = $(".map-img img").attr("src");
+      $(".map-img img").attr("src",src.replace(/zoom=[0-9]+/, "zoom="+map.getZoom()));
+    }
   });
 
   google.maps.event.addListener(map, 'idle', function() {
@@ -301,7 +303,14 @@ function usgs_seismic_info(lat, lng, formatted_address){
         data: {latitude:lat, longitude: lng, riskCategory: riskCategory, siteClass: siteClass, title: "Seismic Maps"},
         success: function(data){
           if(data.request.status == "success"){
-            displayInfo(lat, lng, formatted_address, data);
+
+            if(["asce7","nehrp","ibc"].indexOf(dcrd.substring(0,dcrd.indexOf('-'))) >= 0){
+              display_asce7_nehrp_ibc_info(lat, lng, formatted_address, data);
+            }
+            else if (["asce41"].indexOf(dcrd.substring(0,dcrd.indexOf('-'))) >= 0) {
+              display_asce41_info(lat, lng, formatted_address, data);
+            }
+
           }
           else{
              displayErrorNotification("USGS service returned the following error", data.response);
@@ -319,9 +328,9 @@ function usgs_seismic_info(lat, lng, formatted_address){
 }
 
 
-function displayInfo(lat,lng,formatted_address, usgs){
+function display_asce7_nehrp_ibc_info(lat,lng,formatted_address, usgs){
   usgsDate = new Date(usgs.request.date);
-  source = $("#result-template").html();
+  source = $("#asce7-nehrp-ibc-result-template").html();
   template = Handlebars.compile(source);
   context = {
     project_title: $("#project-title").val(),
@@ -331,6 +340,7 @@ function displayInfo(lat,lng,formatted_address, usgs){
     dateTime: usgsDate.toLocaleDateString() + ", " + usgsDate.toLocaleTimeString(),
     formatted_address: formatted_address,
     latlng: lat + ", " + lng,
+    mapZoom: map.getZoom(),
     ss: usgs.response.data.ss,
     s1: usgs.response.data.s1,
     s1rt: usgs.response.data.s1rt,
@@ -397,6 +407,124 @@ function displayInfo(lat,lng,formatted_address, usgs){
     makecharts();
     $(".spectrum-charts").show();
   }
+}
+
+function display_asce41_info(lat,lng,formatted_address, usgs){
+  usgsDate = new Date(usgs.request.date);
+  source = $("#asce41-result-template").html();
+  template = Handlebars.compile(source);
+  view_data =usgs.response.data;
+  view_model = {
+    "bse-2n":{
+        "display": false,
+        "hazardLevel": {"display": "Hazard Level", "description": "", "value": "BSE-2N"},
+        "ssuh" : { "display": "ssuh", "description" : "max direction uniform hazard (0.2 s)", "value": null },
+        "crs" : { "display": "crs", "description" : "coefficient of risk (0.2 s)", "value": null },
+        "ssrt" : { "display": "ssrt", "description" : "risk-targeted hazard (0.2 s)", "value": null },
+        "ssd" : { "display": "ssd", "description" : "deterministic hazard (0.2 s)", "value": null },
+        "ss" : { "display": "ss", "description" : "spectral response (0.2 s)", "value": null },
+        "fa" : { "display": "fa", "description" : "site amplification factor (0.2 s)", "value": null },
+        "sxs" : { "display": "sxs", "description" : "site-modified spectral response (0.2 s)", "value": null },
+        "s1uh" : { "display": "s1uh", "description" : "max direction uniform hazard (1.0 s)", "value": null },
+        "cr1" : { "display": "cr1", "description" : "coefficient of risk (1.0 s)", "value": null },
+        "s1rt" : { "display": "s1rt", "description" : "risk-targeted hazard (1.0 s)", "value": null },
+        "s1d" : { "display": "s1d", "description" : "deterministic hazard (1.0 s)", "value": null },
+        "s1" : { "display": "s1", "description" : "spectral response (1.0 s)", "value": null },
+        "fv" : { "display": "fv", "description" : "site amplification factor (1.0 s)", "value": null },
+        "sx1" : { "display": "sx1", "description" : "site-modified spectral response (1.0 s)", "value": null },
+    },
+    "bse-1n":{
+        "display": false,
+        "hazardLevel": {"display": "Hazard Level", "description": "", "value": "BSE-1N"},
+        "sxs" : { "display": "sxs", "description" : "site-modified spectral response (0.2 s)", "value": null },
+        "sx1" : { "display": "sx1", "description" : "site-modified spectral response (1.0 s)", "value": null },
+    },
+    "bse-2e":{
+        "display": false,
+        "hazardLevel": {"display": "Hazard Level", "description": "", "value": "BSE-2E"},
+        "ss" : { "display": "ss", "description" : "spectral response (0.2 s)", "value": null },
+        "fa" : { "display": "fa", "description" : "site amplification factor (0.2 s)", "value": null },
+        "sxs" : { "display": "sxs", "description" : "site-modified spectral response (0.2 s)", "value": null },
+        "s1" : { "display": "s1", "description" : "spectral response (1.0 s)", "value": null },
+        "fv" : { "display": "fv", "description" : "site amplification factor (1.0 s)", "value": null },
+        "sx1" : { "display": "sx1", "description" : "site-modified spectral response (1.0 s)", "value": null },
+    },
+    "bse-1e":{
+        "display": false,
+        "hazardLevel": {"display": "Hazard Level", "description": "", "value": "BSE-1E"},
+        "ss" : { "display": "ss", "description" : "spectral response (0.2 s)", "value": null },
+        "fa" : { "display": "fa", "description" : "site amplification factor (0.2 s)", "value": null },
+        "s1" : { "display": "s1", "description" : "spectral response (1.0 s)", "value": null },
+        "fv" : { "display": "fv", "description" : "site amplification factor (1.0 s)", "value": null },
+        "sx1" : { "display": "sx1", "description" : "site-modified spectral response (1.0 s)", "value": null },
+    },
+    "t-sub-l-data":{
+      "display": false,
+      "hazardLevel": {"display": "Hazard Level", "description": "", "value": "BSE-1E"},
+      "t-sub-l" : { "display": "T-Sub-L", "description" : "Long-period transition period in seconds", "value": null },
+    },
+    "custom":{
+        "display": false,
+        "hazardLevel": {"display": "Hazard Level", "description": "", "value": ""},
+        "customProbability" : { "display": "Custom Probability", "description" : "Decimal probability of exceedance in 50 years for target ground motion.", "value": null },
+        "ss" : { "display": "ss", "description" : "spectral response (0.2 s)", "value": null },
+        "fa" : { "display": "fa", "description" : "site amplification factor (0.2 s)", "value": null },
+        "sxs" : { "display": "sxs", "description" : "site-modified spectral response (0.2 s)", "value": null },
+        "s1" : { "display": "s1", "description" : "spectral response (1.0 s)", "value": null },
+        "fv" : { "display": "fv", "description" : "site amplification factor (1.0 s)", "value": null },
+        "sx1" : { "display": "sx1", "description" : "site-modified spectral response (1.0 s)", "value": null },
+    },
+  };
+
+  for(arrItem in view_data){
+    hzl = view_data[arrItem]["hazardLevel"].toLowerCase().replace(/\s+/,'-');
+    view_model[hzl]["display"] = true;
+    for(attr in view_model[hzl]){
+      view_model[hzl][attr]["value"] = view_data[arrItem][attr];
+    }
+  }
+ 
+  context = {
+    project_title: $("#project-title").val(),
+    dcrd: usgs.request.referenceDocument,
+    riskCategory: usgs.request.parameters.riskCategory,
+    siteClass: usgs.request.parameters.siteClass,
+    dateTime: usgsDate.toLocaleDateString() + ", " + usgsDate.toLocaleTimeString(),
+    formatted_address: formatted_address,
+    latlng: lat + ", " + lng,
+    data:view_model,
+    mapZoom: map.getZoom()
+  };
+
+  $("#site-class option").each( function() {
+    if($(this).val() == usgs.request.parameters.siteClass) {
+      context.siteClass = $(this).html();
+    }
+  });
+
+  for(key in usgs.response.data)
+  {
+    if(key.indexOf("_note")>0){
+      error_key = key.replace("_note","");
+      context[error_key] = usgs.response.data[key];
+
+      switch(error_key){
+        case 'fv':
+          context.sd1 = usgs.response.data.sd1 + '  -' + usgs.response.data[key];
+          context.sdc = usgs.response.data.sdc + '  -' + usgs.response.data[key];
+          context.sm1 = usgs.response.data.sm1 + '  -' + usgs.response.data[key];
+		      context.fv = usgs.response.data.fv + '  -' + usgs.response.data[key];
+          break;
+        case 'fa':
+          context.sms = usgs.response.data.sms +'  -'+ usgs.response.data[key];
+          context.sds = usgs.response.data.sds +'  -'+ usgs.response.data[key];
+		      context.fa = usgs.response.data.fa +'  -'+ usgs.response.data[key];
+      }
+    }
+  }
+
+  var html = template(context);
+  $("#result").html(html);
 }
 
 function makecharts()

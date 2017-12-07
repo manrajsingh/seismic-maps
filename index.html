@@ -122,6 +122,8 @@
               <select class="form-control" aria-describedby="btnGroupAddon" id="dcrd">
                 <option value="asce7-16">ASCE 7-16</option>
                 <option value="asce7-10">ASCE 7-10</option>
+                <option value="asce41-17">ASCE 41-17</option>
+                <option value="asce41-13">ASCE 41-13</option>
                 <option value="nehrp-2015">NEHRP-2015</option>
                 <option value="nehrp-2009">NEHRP-2009</option>
                 <option value="ibc-2015">IBC-2015</option>
@@ -159,14 +161,61 @@
       <!-- Results -->
       <div id="result"></div>
 
-      <script id="result-template" type="text/x-handlebars-template">
+      <script id="asce41-result-template" type="text/x-handlebars-template">
         <div class="card mt-5">
           <div class="card-body">
             <h3 class="card-title">{{project_title}} <button class="btn btn-primary d-print-none float-right" onclick="print_map();">Print</button></h3>
             <h5>{{formatted_address}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
             <div class="row d-none d-print-block map-img">
-              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom=13&size=768x100&key=AIzaSyCSDT8WeSFn_3dLYBo5cTq6sUOQVE4o2Gg"></div>
+              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x250&key=AIzaSyCSDT8WeSFn_3dLYBo5cTq6sUOQVE4o2Gg"></div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <table class="d-print-block table table-striped table-hover table-responsive table-sm table-bordered" data-show-print="true">
+                  <tbody>
+                    <tr><th scope="row">Date</th><td>{{dateTime}}</td></tr>
+                    <tr><th scope="row">Design Code Reference Document</th><td>{{dcrd}}</td></tr>
+                    <tr><th scope="row">Risk Category</th><td>{{riskCategory}}</td></tr>
+                    <tr><th scope="row">Site Class</th><td>{{siteClass}}</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {{#each data}}
+              {{#if this.display}}
+                <div class="row page-break-counter">
+                  <div class="col-md-12">
+                    <table class="table table-striped table-hover table-responsive table-sm table-bordered">
+                      <thead>
+                        <tr><th>Type</th><th>Description</th><th>Value</th></tr>
+                      </thead>
+                      <tbody>
+                        {{#each this}}
+                          {{#if this.display }}
+                            <tr><td>{{{this.display}}}</td><td>{{{this.description}}}</td><td>{{{this.value}}}</td></tr>
+                          {{/if}}
+                        {{/each}}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                &nbsp;
+                {{/if}}
+              {{/each}}
+            <!--a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a -->
+          </div>
+        </div>
+      </script>
+      <script id="asce7-nehrp-ibc-result-template" type="text/x-handlebars-template">
+        <div class="card mt-5">
+          <div class="card-body">
+            <h3 class="card-title">{{project_title}} <button class="btn btn-primary d-print-none float-right" onclick="print_map();">Print</button></h3>
+            <h5>{{formatted_address}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
+            <div class="row d-none d-print-block map-img">
+              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x250&key=AIzaSyCSDT8WeSFn_3dLYBo5cTq6sUOQVE4o2Gg"></div>
             </div>
             <div class="row">
               <div class="col-md-12">
@@ -197,7 +246,7 @@
                 </table>
               </div>
             </div>
-            <div class="row">
+            <div class="row page-break">
               <div class="col-md-12">
                 <table class="table table-striped table-hover table-responsive table-sm table-bordered">
                   <thead>
