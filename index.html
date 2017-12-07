@@ -114,6 +114,10 @@
       <div class="alerts-container">
         <div class="alert alert-warning" role="alert">This tool is under development. Don't use it!</div>
       </div>
+      <div class="d-none visible-print-inline-block">
+        <img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/seaoc-logo.png" style="width:50px; margin-right:5px;">
+        <img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/oshpd-logo.jpg" style="width:130px; margin-right:10px; float:right;">
+      </div>
       <div class="search-container">
         <h3>Search for Address or Coordinates (lat,long)</h3> &nbsp;
         <div class="row">
@@ -168,11 +172,11 @@
             <h5>{{formatted_address}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
             <div class="row d-none d-print-block map-img">
-              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x250&key=AIzaSyCSDT8WeSFn_3dLYBo5cTq6sUOQVE4o2Gg"></div>
+              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key=AIzaSyCSDT8WeSFn_3dLYBo5cTq6sUOQVE4o2Gg"></div>
             </div>
             <div class="row">
               <div class="col-md-12">
-                <table class="d-print-block table table-striped table-hover table-responsive table-sm table-bordered" data-show-print="true">
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered" data-show-print="true">
                   <tbody>
                     <tr><th scope="row">Date</th><td>{{dateTime}}</td></tr>
                     <tr><th scope="row">Design Code Reference Document</th><td>{{dcrd}}</td></tr>
@@ -215,7 +219,7 @@
             <h5>{{formatted_address}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
             <div class="row d-none d-print-block map-img">
-              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x250&key=AIzaSyCSDT8WeSFn_3dLYBo5cTq6sUOQVE4o2Gg"></div>
+              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key=AIzaSyCSDT8WeSFn_3dLYBo5cTq6sUOQVE4o2Gg"></div>
             </div>
             <div class="row">
               <div class="col-md-12">

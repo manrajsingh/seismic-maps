@@ -1,4 +1,5 @@
 .navbar, .search-container, .jumbotron, footer, hr,.d-print-none { display: none; }
+
 .card { border: 0px; }
 html,body { font-family: arial; font-size: 10px }
 table { width: 100%; border:1px solid #ccc; margin-bottom: 5px;}
