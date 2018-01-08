@@ -151,9 +151,28 @@ var styles = {
     { name: 'F - Site Response Analysis', value: 'F' }
   ];
 
+  var urlParams = {
+    "ref": "",
+    "risk-category": "",
+    "site-class": "",
+    "title": "",
+    "location": ""
+  };
+
   var update_view = function(){
     selector = options.siteClassSelector;
     ref = $(options.referenceDocumentSelector).val();
+
+    var match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+    while (match = search.exec(query)){
+      urlParams[decode(match[1])] = decode(match[2]);
+    }
+
 
     $(selector + " option").remove();
     siteClasses.forEach(function(i) {
@@ -166,8 +185,28 @@ var styles = {
         }
       }
     });
-    $(selector + ' option[value="D"]').prop('selected', true);
 
+    if(urlParams["site-class"] == ""){
+      $(selector + ' option[value="D"]').prop('selected', true);
+    }
+
+    if(urlParams["location"] != ""){
+      $(".searchbox").val(urlParams["location"]);
+      if(urlParams["ref"] != ""){
+        $("#dcrd option[value="+ urlParams["ref"] +"]").prop('selected', true);
+      }
+      if(urlParams["title"] != ""){
+        $("#project-title").val(urlParams["title"]);
+      }
+      if(urlParams["risk-category"] != ""){
+        $("#risk-category option[value="+ urlParams["risk-category"] +"]").prop('selected', true);
+      }
+      if(urlParams["site-class"] != ""){
+        $("#site-class option[value="+ urlParams["site-class"] +"]").prop('selected', true);
+      }
+      $(".searchbutton").click();
+    }
+    ref = $(options.referenceDocumentSelector).val();
     //hide riskCategory if referenceDocument = asce41.
     if (["asce41"].indexOf(ref.substring(0,ref.indexOf('-'))) >= 0) {
       $("#risk-category").attr("disabled","disabled");
@@ -176,21 +215,30 @@ var styles = {
       $("#risk-category").removeAttr("disabled");
     }
 
+
+
   };
+ 
 
   //listners
   $(options.referenceDocumentSelector).change(function (){
     update_view();
   });
+
+  $(".searchbox").keyup(function(e){
+    $(".searchbox").val($(this).val());
+  });
+
   $(document).ready(function(){
     $(options.referenceDocumentSelector + ' option[value="asce7-10"]').prop('selected', true);
     update_view();
+  
   });
+
+
 })();
 
-$(".searchbox").keyup(function(e){
-  $(".searchbox").val($(this).val());
-});
+
 
 
 function initMap() {
