@@ -193,16 +193,16 @@ var styles = {
     if(urlParams["location"] != ""){
       $(".searchbox").val(urlParams["location"]);
       if(urlParams["ref"] != ""){
-        $("#dcrd option[value="+ urlParams["ref"] +"]").prop('selected', true);
+        $("#dcrd option[value="+ urlParams["ref"].toLowerCase() +"]").prop('selected', true);
       }
       if(urlParams["title"] != ""){
         $("#project-title").val(urlParams["title"]);
       }
       if(urlParams["risk-category"] != ""){
-        $("#risk-category option[value="+ urlParams["risk-category"] +"]").prop('selected', true);
+        $("#risk-category option[value="+ urlParams["risk-category"].toUpperCase() +"]").prop('selected', true);
       }
       if(urlParams["site-class"] != ""){
-        $("#site-class option[value="+ urlParams["site-class"] +"]").prop('selected', true);
+        $("#site-class option[value="+ urlParams["site-class"].toUpperCase() +"]").prop('selected', true);
       }
       $(".searchbutton").click();
     }
