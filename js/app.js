@@ -420,6 +420,7 @@ function display_asce7_nehrp_ibc_info(lat,lng,formatted_address, usgs){
     fpga: usgs.response.data.fpga,
     pgam: usgs.response.data.pgam,
     ssrt: usgs.response.data.ssrt,
+    tsubl: usgs.response.data['t-sub-l'],
     ssuh: usgs.response.data.ssuh,
     ssd: usgs.response.data.ssd
   };
