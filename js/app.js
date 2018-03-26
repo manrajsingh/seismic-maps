@@ -186,6 +186,9 @@ var styles = {
       }
     });
 
+    //default risk category
+    $("#risk-category option[value='II']").prop('selected', true);
+
     if(urlParams["site-class"] == ""){
       $(selector + ' option[value="D"]').prop('selected', true);
     }
@@ -218,7 +221,7 @@ var styles = {
 
 
   };
- 
+
 
   //listners
   $(options.referenceDocumentSelector).change(function (){
@@ -232,7 +235,7 @@ var styles = {
   $(document).ready(function(){
     $(options.referenceDocumentSelector + ' option[value="asce7-10"]').prop('selected', true);
     update_view();
-  
+
   });
 
 
@@ -247,7 +250,7 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 38.6120641, lng: -121.5083665 },
     zoom: 16,
-    mapTypeControl: false
+    mapTypeControl: true
   });
 
   map.setOptions({styles: styles['retro']});
@@ -276,6 +279,16 @@ function initMap() {
       map_dragged = false;
     }
   });
+
+  var panorama = map.getStreetView();
+  google.maps.event.addListener(panorama, 'visible_changed', function() {
+    if (panorama.getVisible()) {
+        $(".centerMarker").hide();
+    } else {
+        $(".centerMarker").show();
+    }
+
+});
 
 
   $('.searchbutton').click(function() {
@@ -608,9 +621,9 @@ function drawChart() {
       legend: {'position': 'bottom' }
     };
     chart = new google.visualization.LineChart(document.getElementById(charts_config[d].target));
-    chart_print = new google.visualization.LineChart(document.getElementById(charts_config[d].target+"_print"));
+    //chart_print = new google.visualization.LineChart(document.getElementById(charts_config[d].target+"_print"));
     chart.draw(data, options);
-    chart_print.draw(data, options);
+    //chart_print.draw(data, options);
   }
 }
 

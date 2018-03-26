@@ -18,8 +18,7 @@ tr:nth-child(even) { background-color:#eee;}
 .h3, h3 {
     font-size: 25px; margin-bottom: 5px;
 }
-.spectrum-charts-print { height: 240px; width:350px; }
-
+ 
 .alert { color: #856404; text-align: center; background-color: #fff3cd; border-color: #ffeeba; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: .25rem;}
 .page-break {page-break-after: always;}
 .page-break-counter:nth-of-type(4) {page-break-after: always;}
