@@ -1,5 +1,5 @@
 Seismic Maps
-[https://manrajsingh.github.io/seismic-maps/]
+[https://seismicmaps.org/]
 
 
 ### Printing results
