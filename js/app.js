@@ -159,6 +159,7 @@ var styles = {
     "location": ""
   };
 
+
   var update_view = function(){
     selector = options.siteClassSelector;
     ref = $(options.referenceDocumentSelector).val();
@@ -213,12 +214,16 @@ var styles = {
     //hide riskCategory if referenceDocument = asce41.
     if (["asce41"].indexOf(ref.substring(0,ref.indexOf('-'))) >= 0) {
       $("#risk-category").attr("disabled","disabled");
+      $(".input-risk-category").hide();
+      $(".input-custom-probability").show();
     }
     else{
       $("#risk-category").removeAttr("disabled");
+      $(".input-risk-category").show();
+      $(".input-custom-probability").hide();
     }
 
-
+    input_boxes_view();
 
   };
 
@@ -228,21 +233,57 @@ var styles = {
     update_view();
   });
 
+  $(".input-coords").keyup(function(){
+    this.value = this.value.replace(/[^0-9\.-]/g,'');
+  })
+
   $(".searchbox").keyup(function(e){
     $(".searchbox").val($(this).val());
   });
 
   $(document).ready(function(){
     $(options.referenceDocumentSelector + ' option[value="asce7-10"]').prop('selected', true);
+    
+    $("[name=searchby]").on("change", function(){
+      update_view();
+      //console.log($("[name=searchby]:checked").val());
+    });
+
     update_view();
 
   });
+
 
 
 })();
 
 
 
+function input_boxes_view(){
+  switch($("[name=searchby]:checked").val()){
+      case "address":
+        $(".input-coords").hide();
+        $(".input-address").show();
+        break;
+      case "coords":
+        $(".input-coords").show();
+        $(".input-address").hide();
+        break;
+    }
+}
+
+function asce7_41_result_view(){
+  if (["asce41"].indexOf(ref.substring(0,ref.indexOf('-'))) >= 0) {
+      $("#risk-category").attr("disabled","disabled");
+      $(".input-risk-category").hide();
+      $(".input-custom-probability").show();
+    }
+    else{
+      $("#risk-category").removeAttr("disabled");
+      $(".input-risk-category").show();
+      $(".input-custom-probability").hide();
+    }
+}
 
 function initMap() {
   // Create the map with no initial style specified.
@@ -275,7 +316,9 @@ function initMap() {
   google.maps.event.addListener(map, 'idle', function() {
     $("#coords-display").html("Lat: " + map.getCenter().lat().toFixed(8) +", Lng: " + map.getCenter().lng().toFixed(8));
     if(map_dragged){
-      $(".searchbox").val(map.getCenter().lat().toFixed(8) + ", " + map.getCenter().lng().toFixed(8));
+      $("[value=coords]").click();
+      $(".input-latitude").val( map.getCenter().lat().toFixed(8));
+      $(".input-longitude").val( map.getCenter().lng().toFixed(8));
       map_dragged = false;
     }
   });
@@ -313,14 +356,42 @@ function clearErrorNotifications(){
 function geocodeAddress(geocoder, resultsMap) {
   clearErrorNotifications();
   $("#result").html('').hide();
-  var address = $(".searchbox").val();
 
-  if(address.length < 3){
-    error_title = "Invalid Input";
-    error_message = "Please provie a valid address or a valid latitude, longitude.";
-    displayErrorNotification(error_title, error_message);
-    return;
+  var address = ($("[name=searchby]:checked").val() == "address")?$(".searchbox").val():$(".input-latitude").val() +","+ $(".input-longitude").val();
+  if($("[name=searchby]:checked").val() == "address"){
+    address =$(".searchbox").val();
+    if(address.length < 3){
+      error_title = "Invalid Input";
+      error_message = "Please provie a valid address";
+      displayErrorNotification(error_title, error_message);
+      return;
+    }
   }
+  else{
+    lat = $(".input-latitude").val();
+    lng = $(".input-longitude").val();
+    if (lat < -90 || lat > 90) {
+      error_title = "Invalid Input";
+      error_message = "Latitude must be between -90 and 90 degrees inclusive.";
+      displayErrorNotification(error_title, error_message);
+      return;
+    }
+    else if (lng < -180 || lng > 180) {
+      error_title = "Invalid Input";
+      error_message = "Longitude must be between -180 and 180 degrees inclusive.";
+      displayErrorNotification(error_title, error_message);
+      return;
+    }
+    else if (lat == "" || lng == "") {
+      error_title = "Invalid Input";
+      error_message = "Enter a valid Latitude or Longitude!";
+      displayErrorNotification(error_title, error_message);
+      return;
+    }
+    address = lat + "," + lng;
+  }
+
+
   if($("#site-class").val() == 'F'){
     error_title = "Site Class: F";
     error_message = "A site response analysis shall be performed in accordance with ASCE/SEI 7 section 21.1 for structures on Site Class F sites. If your structure is exempted under ASCE/SEI 7 Section 20.3.1, select a substitute site class.";
@@ -329,7 +400,7 @@ function geocodeAddress(geocoder, resultsMap) {
   }
 
   $("#result").html('<div style="text-align:center; margin-top:20px;"><img src="https://loading.io/spinners/hourglass/lg.sandglass-time-loading-gif.gif"></div>').show();
-  $(".searchbox,.searchbutton").attr("disabled","disabled");
+  $(".searchbox,.searchbutton,.input-coords").attr("disabled","disabled");
   $(".searchbutton").html("Searching ... ");
 
   if(address.search(/[a-zA-Z]/) < 0 && address.search(",") > 0 ){
@@ -353,8 +424,8 @@ function geocodeAddress(geocoder, resultsMap) {
       }
       else {
         displayErrorNotification('Geocode was not successful for the following reason: ', status);
-        $(".searchbox,.searchbutton").removeAttr("disabled");
-        $(".searchbutton").html("Search");
+        $(".searchbox,.searchbutton,.input-coords").removeAttr("disabled");
+        $(".searchbutton").html("Go");
       }
     });
   }
@@ -365,8 +436,14 @@ function usgs_seismic_info(lat, lng, formatted_address){
   riskCategory = $("#risk-category").val();
   siteClass = $("#site-class").val();
   if (["asce41"].indexOf(dcrd.substring(0,dcrd.indexOf('-'))) >= 0) {
-    //Dont send risk category as part of param when ref document is asce41
-    input = {latitude:lat, longitude: lng, siteClass: siteClass, title: "Seismic Maps"};
+    if($("#custom-probability").val() != "" ){
+      //Dont send risk category as part of param when ref document is asce41
+      input = {latitude:lat, longitude: lng, siteClass: siteClass, customProbability: $("#custom-probability").val(), title: "Seismic Maps"};
+    }
+    else{
+      input = {latitude:lat, longitude: lng, siteClass: siteClass, title: "Seismic Maps"};
+    }
+    
   }
   else{
     input = {latitude:lat, longitude: lng, riskCategory: riskCategory, siteClass: siteClass, title: "Seismic Maps"};
@@ -391,14 +468,15 @@ function usgs_seismic_info(lat, lng, formatted_address){
           else{
              displayErrorNotification("USGS service returned the following error", data.response);
           }
-          $(".searchbox,.searchbutton").removeAttr("disabled");
-          $(".searchbutton").html("Search");
+          $(".searchbox,.searchbutton,.input-coords").removeAttr("disabled");
+          $(".searchbutton").html("Go");
+          asce7_41_result_view();
         },
         error: function(data){
           displayErrorNotification("USGS service returned the following error", data.status + " " + data.statusText + "<br>" + data.responseJSON.response );
           $("#result").html('').hide();
-          $(".searchbox,.searchbutton").removeAttr("disabled");
-          $(".searchbutton").html("Search");
+          $(".searchbox,.searchbutton,.input-coords").removeAttr("disabled");
+          $(".searchbutton").html("Go");
         },
       });
 }
@@ -455,12 +533,12 @@ function display_asce7_nehrp_ibc_info(lat,lng,formatted_address, usgs){
           context.sd1 = usgs.response.data.sd1 + '  -' + usgs.response.data[key];
           context.sdc = usgs.response.data.sdc + '  -' + usgs.response.data[key];
           context.sm1 = usgs.response.data.sm1 + '  -' + usgs.response.data[key];
-		      context.fv = usgs.response.data.fv + '  -' + usgs.response.data[key];
+              context.fv = usgs.response.data.fv + '  -' + usgs.response.data[key];
           break;
         case 'fa':
           context.sms = usgs.response.data.sms +'  -'+ usgs.response.data[key];
           context.sds = usgs.response.data.sds +'  -'+ usgs.response.data[key];
-		      context.fa = usgs.response.data.fa +'  -'+ usgs.response.data[key];
+              context.fa = usgs.response.data.fa +'  -'+ usgs.response.data[key];
       }
     }
   }
@@ -567,6 +645,7 @@ function display_asce41_info(lat,lng,formatted_address, usgs){
     project_title: $("#project-title").val(),
     dcrd: usgs.request.referenceDocument,
     riskCategory: usgs.request.parameters.riskCategory,
+    customProbability: usgs.request.parameters.customProbability,
     siteClass: usgs.request.parameters.siteClass,
     dateTime: usgsDate.toLocaleDateString() + ", " + usgsDate.toLocaleTimeString(),
     formatted_address: formatted_address,
@@ -592,12 +671,12 @@ function display_asce41_info(lat,lng,formatted_address, usgs){
           context.sd1 = usgs.response.data.sd1 + '  -' + usgs.response.data[key];
           context.sdc = usgs.response.data.sdc + '  -' + usgs.response.data[key];
           context.sm1 = usgs.response.data.sm1 + '  -' + usgs.response.data[key];
-		      context.fv = usgs.response.data.fv + '  -' + usgs.response.data[key];
+              context.fv = usgs.response.data.fv + '  -' + usgs.response.data[key];
           break;
         case 'fa':
           context.sms = usgs.response.data.sms +'  -'+ usgs.response.data[key];
           context.sds = usgs.response.data.sds +'  -'+ usgs.response.data[key];
-		      context.fa = usgs.response.data.fa +'  -'+ usgs.response.data[key];
+              context.fa = usgs.response.data.fa +'  -'+ usgs.response.data[key];
       }
     }
   }
