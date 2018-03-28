@@ -362,7 +362,7 @@ function geocodeAddress(geocoder, resultsMap) {
     address =$(".searchbox").val();
     if(address.length < 3){
       error_title = "Invalid Input";
-      error_message = "Please provie a valid address";
+      error_message = "Please provide a valid address";
       displayErrorNotification(error_title, error_message);
       return;
     }
