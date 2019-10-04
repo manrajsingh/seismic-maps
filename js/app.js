@@ -245,7 +245,7 @@ var styles = {
     $(options.referenceDocumentSelector + ' option[value="asce7-10"]').prop('selected', true);
     
     $("[name=searchby]").on("change", function(){
-      update_view();
+      input_boxes_view();
       //console.log($("[name=searchby]:checked").val());
     });
 
@@ -435,6 +435,7 @@ function usgs_seismic_info(lat, lng, formatted_address){
   dcrd = $("#dcrd").val();
   riskCategory = $("#risk-category").val();
   siteClass = $("#site-class").val();
+  tracking_payload = dcrd + '|' + riskCategory + '|' + siteClass + '|'+ formatted_address + '|' + lat + ',' + lng;
   if (["asce41"].indexOf(dcrd.substring(0,dcrd.indexOf('-'))) >= 0) {
     if($("#custom-probability").val() != "" ){
       //Dont send risk category as part of param when ref document is asce41
@@ -454,9 +455,8 @@ function usgs_seismic_info(lat, lng, formatted_address){
         dataType: 'json',
         url: 'https://earthquake.usgs.gov/ws/designmaps/'+ dcrd +'.json',
         data: input,
-        success: function(data){
+        success: function(data, status, jqXHR){
           if(data.request.status == "success"){
-
             if(["asce7","nehrp","ibc"].indexOf(dcrd.substring(0,dcrd.indexOf('-'))) >= 0){
               display_asce7_nehrp_ibc_info(lat, lng, formatted_address, data);
             }
@@ -471,15 +471,27 @@ function usgs_seismic_info(lat, lng, formatted_address){
           $(".searchbox,.searchbutton,.input-coords").removeAttr("disabled");
           $(".searchbutton").html("Go");
           asce7_41_result_view();
+          ga_event('usgs-search', tracking_payload, 'Seismic Maps data search', jqXHR.status);
         },
         error: function(data){
           displayErrorNotification("USGS service returned the following error", data.status + " " + data.statusText + "<br>" + data.responseJSON.response );
+          ga_event('usgs-search', tracking_payload, 'Seismic Maps data search', data.status);
           $("#result").html('').hide();
           $(".searchbox,.searchbutton,.input-coords").removeAttr("disabled");
           $(".searchbutton").html("Go");
         },
       });
 }
+
+function ga_event(eCategory, eAction, eLabel, eValue){
+    gtag('event', eAction, {
+	        'event_category': eCategory,
+	        'event_label': eLabel,
+	        'value': eValue 
+	      });
+
+}
+
 
 function display_asce7_nehrp_ibc_info(lat,lng,formatted_address, usgs){
   usgsDate = new Date(usgs.request.date);
@@ -631,7 +643,7 @@ function display_asce41_info(lat,lng,formatted_address, usgs){
         "sxs" : { "display": "S<sub>XS</sub>", "description" : "site-modified spectral response (0.2 s)", "value": null },
         "s1" : { "display": "S<sub>1</sub>", "description" : "spectral response (1.0 s)", "value": null },
         "fv" : { "display": "F<sub>v</sub>", "description" : "site amplification factor (1.0 s)", "value": null },
-        "sx1" : { "display": "S<sub>XS</sub>", "description" : "site-modified spectral response (1.0 s)", "value": null },
+        "sx1" : { "display": "S<sub>X1</sub>", "description" : "site-modified spectral response (1.0 s)", "value": null },
     },
   };
 
