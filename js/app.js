@@ -191,7 +191,7 @@ var styles = {
     $("#risk-category option[value='II']").prop('selected', true);
 
     if(urlParams["site-class"] == ""){
-      $(selector + ' option[value="D"]').prop('selected', true);
+      $(selector + ' option[value="D-default"]').prop('selected', true);
     }
 
     if(urlParams["location"] != ""){
@@ -242,7 +242,7 @@ var styles = {
   });
 
   $(document).ready(function(){
-    $(options.referenceDocumentSelector + ' option[value="asce7-10"]').prop('selected', true);
+    $(options.referenceDocumentSelector + ' option[value="asce7-16"]').prop('selected', true);
     
     $("[name=searchby]").on("change", function(){
       input_boxes_view();
