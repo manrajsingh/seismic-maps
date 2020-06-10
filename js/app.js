@@ -191,7 +191,7 @@ var styles = {
     $("#risk-category option[value='II']").prop('selected', true);
 
     if(urlParams["site-class"] == ""){
-      $(selector + ' option[value="D"]').prop('selected', true);
+      $(selector + ' option[value="D-default"]').prop('selected', true);
     }
 
     if(urlParams["location"] != ""){
