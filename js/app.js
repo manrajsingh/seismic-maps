@@ -191,7 +191,7 @@ var styles = {
     $("#risk-category option[value='II']").prop('selected', true);
 
     if(urlParams["site-class"] == ""){
-      $(selector + ' option[value="D"]').prop('selected', true);
+      $(selector + ' option[value="D-default"]').prop('selected', true);
     }
 
     if(urlParams["location"] != ""){
@@ -242,7 +242,7 @@ var styles = {
   });
 
   $(document).ready(function(){
-    $(options.referenceDocumentSelector + ' option[value="asce7-10"]').prop('selected', true);
+    $(options.referenceDocumentSelector + ' option[value="asce7-16"]').prop('selected', true);
     
     $("[name=searchby]").on("change", function(){
       input_boxes_view();
@@ -399,7 +399,7 @@ function geocodeAddress(geocoder, resultsMap) {
     return;
   }
 
-  $("#result").html('<div style="text-align:center; margin-top:20px;"><img src="https://loading.io/spinners/hourglass/lg.sandglass-time-loading-gif.gif"></div>').show();
+  $("#result").html('<div style="text-align:center; margin-top:40px;"><img src="/img/loader.gif"></div>').show();
   $(".searchbox,.searchbutton,.input-coords").attr("disabled","disabled");
   $(".searchbutton").html("Searching ... ");
 
@@ -439,15 +439,15 @@ function usgs_seismic_info(lat, lng, formatted_address){
   if (["asce41"].indexOf(dcrd.substring(0,dcrd.indexOf('-'))) >= 0) {
     if($("#custom-probability").val() != "" ){
       //Dont send risk category as part of param when ref document is asce41
-      input = {latitude:lat, longitude: lng, siteClass: siteClass, customProbability: $("#custom-probability").val(), title: "Seismic Maps"};
+      input = {latitude:lat, longitude: lng, siteClass: siteClass, customProbability: $("#custom-probability").val(), title: "Example"};
     }
     else{
-      input = {latitude:lat, longitude: lng, siteClass: siteClass, title: "Seismic Maps"};
+      input = {latitude:lat, longitude: lng, siteClass: siteClass, title: "Example"};
     }
     
   }
   else{
-    input = {latitude:lat, longitude: lng, riskCategory: riskCategory, siteClass: siteClass, title: "Seismic Maps"};
+    input = {latitude:lat, longitude: lng, riskCategory: riskCategory, siteClass: siteClass, title: "Example"};
   }
 
   $.ajax({
@@ -629,7 +629,8 @@ function display_asce41_info(lat,lng,formatted_address, usgs){
         "fa" : { "display": "F<sub>a</sub>", "description" : "site amplification factor (0.2 s)", "value": null },
         "fv" : { "display": "F<sub>v</sub>", "description" : "site amplification factor (1.0 s)", "value": null },
     },
-    "t-sub-l-data":{
+    //"t-sub-l-data":{
+    "tl-data":{
       "display": false,
       "hazardLevel": {"display": "Hazard Level", "description": "", "value": "BSE-1E"},
       "t-sub-l" : { "display": "T-Sub-L", "description" : "Long-period transition period in seconds", "value": null },
@@ -647,6 +648,7 @@ function display_asce41_info(lat,lng,formatted_address, usgs){
     },
   };
 
+  console.log(view_data);
   for(arrItem in view_data){
     hzl = view_data[arrItem]["hazardLevel"].toLowerCase().replace(/\s+/,'-');
     view_model[hzl]["display"] = true;
