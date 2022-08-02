@@ -452,6 +452,7 @@ function usgs_seismic_info(lat, lng, formatted_address){
 
   $.ajax({
         method: 'GET',
+	timeout: 12000,
         dataType: 'json',
         url: 'https://earthquake.usgs.gov/ws/designmaps/'+ dcrd +'.json',
         data: input,
@@ -473,9 +474,10 @@ function usgs_seismic_info(lat, lng, formatted_address){
           asce7_41_result_view();
           ga_event('usgs-search', tracking_payload, 'Seismic Maps data search', jqXHR.status);
         },
-        error: function(data){
-          displayErrorNotification("USGS service returned the following error", data.status + " " + data.statusText + "<br>" + data.responseJSON.response );
-          ga_event('usgs-search', tracking_payload, 'Seismic Maps data search', data.status);
+        error: function(jqXHR , textStatus, errorThrown){
+	  //displayErrorNotification("USGS service returned the following error", jqXHR.status + " " + jqXHR.statusText + "<br>" + jqXHR.responseJSON.response );
+	  displayErrorNotification("USGS service error: ", textStatus+"("+jqXHR.status+")");
+          ga_event('usgs-search', tracking_payload, 'Seismic Maps data search', textStatus);
           $("#result").html('').hide();
           $(".searchbox,.searchbutton,.input-coords").removeAttr("disabled");
           $(".searchbutton").html("Go");
