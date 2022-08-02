@@ -525,6 +525,8 @@ function display_asce7_nehrp_ibc_info(lat,lng,formatted_address, usgs){
     fa: usgs.response.data.fa,
     fv: usgs.response.data.fv,
     fpga: usgs.response.data.fpga,
+	  pgauh: usgs.response.data.pgauh,
+	  cv: usgs.response.data.cv,
     pgam: usgs.response.data.pgam,
     ssrt: usgs.response.data.ssrt,
     tsubl: usgs.response.data['t-sub-l'],
