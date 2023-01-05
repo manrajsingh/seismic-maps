@@ -142,12 +142,19 @@ var styles = {
 
   siteClasses = [
     { name: 'A - Hard Rock', value: 'A' },
-    { name: 'B - Rock', value: 'B' },
-    { name: 'B - Estimated (see Section 11.4.3)', value: 'B-estimated', hide_in_ref: ['asce7-10','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
-    { name: 'C - Very Dense Soil and Soft Rock', value: 'C' },
-    { name: 'D - Stiff Soil', value: 'D' },
-    { name: 'D - Default (See Section 11.4.3)', value: 'D-default', hide_in_ref: ['asce7-10','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
-    { name: 'E - Soft Clay Soil', value: 'E' },
+    { name: 'B - Rock', value: 'B', hide_in_ref: ['asce7-22'] },
+    { name: 'B - Medium Hard Rock', value: 'B', hide_in_ref: ['asce7-10','asce7-16','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },  
+    { name: 'B - Estimated (see Section 11.4.3)', value: 'B-estimated', hide_in_ref: ['asce7-10','asce7-22','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
+    { name: 'BC - Soft Rock', value: 'BC', hide_in_ref: ['asce7-10','asce7-16','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },  
+    { name: 'C - Very Dense Soil and Soft Rock', value: 'C', hide_in_ref: ['asce7-22'] },
+    { name: 'C - Very Dense Sand or Hard Clay', value: 'C', hide_in_ref: ['asce7-10','asce7-16','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
+    { name: 'CD - Dense Sand or Very Stiff Clay', value: 'CD', hide_in_ref: ['asce7-10','asce7-16','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] }, 
+    { name: 'D - Stiff Soil', value: 'D', hide_in_ref: ['asce7-22']  },
+    { name: 'D - Medium Dense Sand or Stiff Clay', value: 'D', hide_in_ref: ['asce7-10','asce7-16','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] }, 
+    { name: 'D - Default (See Section 11.4.3)', value: 'D-default', hide_in_ref: ['asce7-10','asce7-22','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
+    { name: 'DE - Loose Sand or Medium Stiff Clay', value: 'DE', hide_in_ref: ['asce7-10','asce7-16','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] }, 
+    { name: 'E - Very Loose Sand or Soft Clay', value: 'E', hide_in_ref: ['asce7-10','asce7-16','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },  
+    { name: 'E - Soft Clay Soil', value: 'E', hide_in_ref: ['asce7-22']},
     { name: 'F - Site Response Analysis', value: 'F' }
   ];
 
