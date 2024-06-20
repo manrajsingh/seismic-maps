@@ -141,7 +141,8 @@ var styles = {
   }
 
   siteClasses = [
-    { name: 'A - Hard Rock', value: 'A' },
+    { name: 'Default', value: 'Default',hide_in_ref: ['asce7-10','asce7-16','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
+    { name: 'A - Hard Rock', value: 'A' }, 
     { name: 'B - Rock', value: 'B' },
     { name: 'B - Estimated (see Section 11.4.3)', value: 'B-estimated', hide_in_ref: ['asce7-10','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
     { name: 'C - Very Dense Soil and Soft Rock', value: 'C' },
