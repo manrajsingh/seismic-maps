@@ -32,8 +32,9 @@
       }
       .btn-group-toggle > .btn  { cursor: pointer; }
       .btn-group .btn-secondary.active { background-color: #4e4e4e }
-      
+      caption {caption-side: top; color: black; font-weight: bold; text-align: center;}
       th { text-align: left;}
+      th.center { text-align: center;}
 
       /* map style marker */
       #map .centerMarker{
@@ -124,10 +125,7 @@
     </div>
     <div class="container">
       <div class="alerts-container">
-        <div class="alert alert-info" role="alert">
-          USGS web services were down for some period of time and as a result this tool wasn't operational, resulting in <em>timeout</em> error. <br/>
-          USGS web services are now operational so this tool should work as expected.
-        </div> 
+	      <div class="alert alert-info" role="alert"><strong>Announcement</strong><br>ASCE 7-22 is now available.</div>
       </div>
       <div class="d-none visible-print-inline-block">
         <img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/seaoc-logo.png" style="width:50px; margin-right:5px;">
@@ -139,6 +137,7 @@
             <div class="input-group col-md-4">
               <span class="input-group-addon" id="btnGroupAddon">Reference<span class="glyphicons glyphicons-arrow-right"></span></span>
               <select class="form-control" aria-describedby="btnGroupAddon" id="dcrd">
+                <option value="asce7-22">ASCE 7-22</option>
                 <option value="asce7-16">ASCE 7-16</option>
                 <option value="asce7-10">ASCE 7-10</option>
                 <option value="asce41-17">ASCE 41-17</option>
@@ -243,6 +242,136 @@
                 &nbsp;
                 {{/if}}
               {{/each}}
+            <!--a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a -->
+          </div>
+        </div>
+      </script>
+      <script id="asce7-22" type="text/x-handlebars-template">
+        <div class="card mt-5">
+          <div class="card-body">
+            <h3 class="card-title">{{project_title}} <button class="btn btn-primary d-print-none float-right" onclick="print_map();">Print</button></h3>
+            <h5>{{formatted_address}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
+            <div class="row d-none d-print-block map-img">
+              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key=AIzaSyDKDz3WNmHaEZq6Sn_AXUZXxLQSrHsnRts"></div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered" data-show-print="true">
+                  <tbody>
+                    <tr><th scope="row">Date</th><td>{{dateTime}}</td></tr>
+                    <tr><th scope="row">Design Code Reference Document</th><td>{{dcrd}}</td></tr>
+                    <tr><th scope="row">Risk Category</th><td>{{riskCategory}}</td></tr>
+                    <tr><th scope="row">Site Class</th><td>{{siteClass}}</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered">
+                  <thead>
+                   <tr><th>Type</th><th>Value</th><th>Description (Data)</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>S<sub>S</sub></td><td>{{ss}}</td><td>The MCE<sub>R</sub> spectral response acceleration at 0.2 seconds for Site Class BC, in units of g.</td></tr>
+                    <tr><td>S<sub>1</sub></td><td>{{s1}}</td><td>The MCE<sub>R</sub> spectral response acceleration at 1 second for Site Class BC, in units of g.</td></tr>
+                    <tr><td>S<sub>MS</sub></td><td>{{sms}}</td><td>S<sub>MS</sub> = 1.5 x S<sub>DS</sub>, the Risk-Targeted Maximum Considered Earthquake (MCE<sub>R</sub>) spectral response acceleration for short periods (of the two-period spectrum) and the user-specified Site Class.</td></tr>
+                    <tr><td>S<sub>M1</sub></td><td>{{sm1}}</td><td>S<sub>M1</sub> = 1.5 x S<sub>D1</sub>, the MCE<sub>R</sub> spectral response acceleration for 1 second (of the two-period spectrum) and the user-specified Site Class. </td></tr>
+                    <tr><td>S<sub>DS</sub></td><td>{{sds}}</td><td>The design spectral response acceleration for short periods (of the two-period spectrum) and the user-specified Site Class, in units of g.</td></tr>
+                    <tr><td>S<sub>D1</sub></td><td>{{sd1}}</td><td>The design spectral response acceleration for 1 second (of the two-period spectrum) and the user-specified Site Class, in units of g </td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row page-break">
+              <div class="col-md-12">
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered">
+                  <thead>
+                    <tr><th>Type</th><th>Value</th><th>Description (Data Contd.)</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>SDC</td><td>{{sdc}}</td><td>Seismic design category</td></tr>
+                    <tr><td>PGA<sub>M</sub></td><td>{{pgam}}</td><td>PGA<sub>M</sub>, the Geometric-Mean Maximum Considered Earthquake (MCE<sub>G</sub>) peak ground acceleration for the user-specified Site Class, in units of g </td></tr>
+                    <tr><td>T<sub>S</sub></td><td>{{ts}}</td><td>T<sub>S</sub> = S<sub>D1</sub>/S<sub>DS</sub>, in seconds, for construction of the two-period design spectrum</td></tr>
+                    <tr><td>T<sub>0</sub></td><td>{{t0}}</td><td>T<sub>0</sub> = 0.2 x T<sub>S</sub>, in seconds, for construction of the two-period design response spectrum</td></tr>
+                    <tr><td>T<sub>L</sub></td><td>{{tl}}</td><td>T<sub>L</sub>, the long-period transition period, in seconds, for construction of the two-period design response spectrum</td></tr>
+                    <!--tr><td>C<sub>V</sub></td><td>{{cv}}</td><td>Vertical coefficient</td></tr-->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row page-break">
+              <div class="col-md-12">
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered">
+                  <thead>
+                    <tr><th>Type</th><th>Value</th><th>Description (Underlying Data and Metadata)</th></tr>
+                  </thead>
+                  <tbody>
+		    <tr><td>PGA<sub>uh</sub></td><td>{{pgauh}}</td><td>Probabilistic uniform-hazard (2%-in-50-years), geometric-mean peak ground acceleration, in units of g.</td></tr>
+		    <tr><td>PGA<sub>84th</sub></td><td>{{pga84th}}</td><td>Deterministic 84th-percentile, geometric-mean peak ground acceleration (without deterministic lower limit), in units of g.</td></tr>
+                    <tr><td>V<sub>S30</sub></td><td>{{vs30}}</td><td>The shear-wave velocity used for the user-specified Site Class, in units of m/s </td></tr>
+                    <tr><td>Spatial Interpolation Method</td><td>{{spatialInterpolationMethod}}</td><td>Identifier for spatial interpolation method used to obtain values for location of interest from underlying gridded values: "linearloglinear" for bilinear of natural logarithm of values.</td></tr>
+		    <tr><td>PGA<sub>dFloor</sub></td><td>{{pgadFloor}}</td><td>Deterministic lower limit peak ground acceleration (PGA<sub>G</sub>) for the user-specified Site Class, in units of g.</td></tr>
+		    <tr><td>riskTargetedSpectrum</td><td></td><td>Probabilistic risk-targeted, maximum direction response spectrum (for 1%-in-50-years collapse risk)</td></tr>
+		    <tr><td>eightyFourthSpectrum</td><td></td><td>Deterministic 84<sup>th</sup>-percentile, maximum-direction response spectrum (without deterministic lower limit)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row" id="spectrum-data">
+              <div class="col-md-4 text-center">
+                <a class="small text-muted" href="javascript:copy_table_data('dt-multiperiod')">Click to copy</a>
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered" id="dt-multiperiod">
+                  <caption> Multi Period</caption>
+                  <thead>
+		    <tr><th class="center">Period<br>T(s)</th><th>Design Spectrum Ordinates (g)</th><th>MCE<sub>R</sub> Spectrum Ordinates (g)</sub></th></tr>
+                  </thead>
+                  <tbody>
+                    {{#each multiPeriodDesignSpectrum.periods}}
+                    <tr><td>{{this}}</td><td>{{ lookup @root.multiPeriodDesignSpectrum.ordinates @index}}</td><td>{{ lookup @root.multiPeriodMCErSpectrum.ordinates @index}}</td></tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-4 text-center">
+                <a class="small text-muted" href="javascript:copy_table_data('dt-twoperiod')">Click to copy</a>
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered" id="dt-twoperiod">
+                  <caption> Two Period</caption>
+                  <thead>
+		    <tr><th>Period T(s)</th><th> Design Spectrum Ordinates (g)</th><th>MCE<sub>R</sub> Spectrum Ordinates (g)</th></tr>
+                  </thead>
+                  <tbody>
+                    {{#each twoPeriodDesignSpectrum.periods}}
+                    <tr><td>{{this}}</td><td>{{ lookup @root.twoPeriodDesignSpectrum.ordinates @index}}</td><td>{{ lookup @root.twoPeriodMCErSpectrum.ordinates @index}}</td></tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-4 text-center">
+                <a class="small text-muted" href="javascript:copy_table_data('dt-vertical')">Click to copy</a>
+                <table class="table table-striped table-hover table-responsive table-sm table-bordered" id="dt-vertical">
+                  <caption> Probabilistic & Deterministic</caption>
+                  <thead>
+		    <tr><th>Period T(s)</th><th>Risk Targeted Spectrum Ordinates (g)</th><th>84<sup>th</sup> Spectrum Ordinates(g)</th></tr>
+                  </thead>
+                  <tbody>
+                    {{#each riskTargetedSpectrum.periods}}
+                    <tr><td>{{this}}</td><td>{{ lookup @root.riskTargetedSpectrum.ordinates @index}}</td><td>{{ lookup @root.eightyFourthSpectrum.ordinates @index}}</td></tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div id="sm_chart" class="spectrum-charts"></div>
+              </div>
+              <div class="col-md-6">
+                <div id="sd_chart" class="spectrum-charts"></div>
+              </div>
+            </div>
             <!--a href="#" class="card-link">Card link</a>
             <a href="#" class="card-link">Another link</a -->
           </div>

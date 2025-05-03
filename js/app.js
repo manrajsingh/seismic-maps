@@ -141,14 +141,19 @@ var styles = {
   }
 
   siteClasses = [
-    { name: 'A - Hard Rock', value: 'A' },
-    { name: 'B - Rock', value: 'B' },
-    { name: 'B - Estimated (see Section 11.4.3)', value: 'B-estimated', hide_in_ref: ['asce7-10','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
-    { name: 'C - Very Dense Soil and Soft Rock', value: 'C' },
-    { name: 'D - Stiff Soil', value: 'D' },
-    { name: 'D - Default (See Section 11.4.3)', value: 'D-default', hide_in_ref: ['asce7-10','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
-    { name: 'E - Soft Clay Soil', value: 'E' },
-    { name: 'F - Site Response Analysis', value: 'F' }
+    { name: 'Default', value: 'Default', hide_in_ref:['asce7-16','asce7-10','asce41-17','asce41-13','nehrp-2009','nehrp-2015', 'ibc-2015', 'ibc-2012'] },
+    { name: 'A', value: 'A' },
+    { name: 'B', value: 'B', hide_in_ref:['asce7-16','asce7-10','asce41-17','asce41-13','nehrp-2009','nehrp-2015', 'ibc-2015', 'ibc-2012'] },
+    { name: 'BC', value: 'BC', hide_in_ref:['asce7-16','asce7-10','asce41-17','asce41-13','nehrp-2009','nehrp-2015', 'ibc-2015', 'ibc-2012'] },
+    { name: 'B - Rock', value: 'B', hide_in_ref:['asce7-22']},
+    { name: 'B - Estimated (see Section 11.4.3)', value: 'B-estimated', hide_in_ref: ['asce7-22', 'asce7-10','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
+    { name: 'C', value: 'C' },
+    { name: 'CD', value: 'CD', hide_in_ref:['asce7-16','asce7-10','asce41-17','asce41-13','nehrp-2009','nehrp-2015', 'ibc-2015', 'ibc-2012'] },
+    { name: 'D', value: 'D' },
+    { name: 'D - Default (See Section 11.4.3)', value: 'D-default', hide_in_ref: ['asce7-22','asce7-10','asce41-13','nehrp-2009', 'ibc-2015', 'ibc-2012'] },
+    { name: 'DE', value: 'DE', hide_in_ref:['asce7-16','asce7-10','asce41-17','asce41-13','nehrp-2009','nehrp-2015', 'ibc-2015', 'ibc-2012'] },
+    { name: 'E', value: 'E' },
+    { name: 'F', value: 'F' }
   ];
 
   var urlParams = {
@@ -242,7 +247,7 @@ var styles = {
   });
 
   $(document).ready(function(){
-    $(options.referenceDocumentSelector + ' option[value="asce7-16"]').prop('selected', true);
+    $(options.referenceDocumentSelector + ' option[value="asce7-22"]').prop('selected', true);
     
     $("[name=searchby]").on("change", function(){
       input_boxes_view();
@@ -459,7 +464,13 @@ function usgs_seismic_info(lat, lng, formatted_address){
         success: function(data, status, jqXHR){
           if(data.request.status == "success"){
             if(["asce7","nehrp","ibc"].indexOf(dcrd.substring(0,dcrd.indexOf('-'))) >= 0){
-              display_asce7_nehrp_ibc_info(lat, lng, formatted_address, data);
+              if( dcrd == 'asce7-22'){
+                display_asce7_22(lat, lng, formatted_address, data);
+              }
+              else {
+                display_asce7_nehrp_ibc_info(lat, lng, formatted_address, data);
+              }
+              
             }
             else if (["asce41"].indexOf(dcrd.substring(0,dcrd.indexOf('-'))) >= 0) {
               display_asce41_info(lat, lng, formatted_address, data);
@@ -494,6 +505,93 @@ function ga_event(eCategory, eAction, eLabel, eValue){
 
 }
 
+function display_asce7_22(lat,lng,formatted_address, usgs){
+  usgsDate = new Date(usgs.request.date);
+  source = $("#asce7-22").html();
+  template = Handlebars.compile(source);
+  context = {
+    project_title: $("#project-title").val(),
+    dcrd: usgs.request.referenceDocument,
+    riskCategory: usgs.request.parameters.riskCategory,
+    siteClass: usgs.request.parameters.siteClass,
+    dateTime: usgsDate.toLocaleDateString() + ", " + usgsDate.toLocaleTimeString(),
+    formatted_address: formatted_address,
+    latlng: lat + ", " + lng,
+    mapZoom: map.getZoom(),
+    ss: usgs.response.data.ss,//
+    s1: usgs.response.data.s1,//
+    sds: usgs.response.data.sds,//
+    sd1: usgs.response.data.sd1,//
+    sms: usgs.response.data.sms,//
+    sm1: usgs.response.data.sm1,//
+    sdc: usgs.response.data.sdc,
+	  cv: usgs.response.data.cv, 
+    pgam: usgs.response.data.pgam,
+    ts: usgs.response.data.ts,
+    t0: usgs.response.data.t0,
+    tl: usgs.response.data.tl,
+    multiPeriodDesignSpectrum:  usgs.response.data.multiPeriodDesignSpectrum,
+    multiPeriodMCErSpectrum:  usgs.response.data.multiPeriodMCErSpectrum,
+    twoPeriodDesignSpectrum:  usgs.response.data.twoPeriodDesignSpectrum,
+    twoPeriodMCErSpectrum:  usgs.response.data.twoPeriodMCErSpectrum,
+    verticalDesignSpectrum:  usgs.response.data.verticalDesignSpectrum,
+    verticalMCErSpectrum:  usgs.response.data.verticalMCErSpectrum,
+    pgauh: usgs.response.data.underlyingData.pgauh ,
+    pga84th: usgs.response.data.underlyingData.pga84th ,
+    riskTargetedSpectrum: usgs.response.data.underlyingData.riskTargetedSpectrum,
+    eightyFourthSpectrum: usgs.response.data.underlyingData.eightyFourthSpectrum,
+    vs30: usgs.response.metadata.vs30,
+    spatialInterpolationMethod: usgs.response.metadata.spatialInterpolationMethod,
+    pgadFloor: usgs.response.metadata.pgadFloor,
+  }
+  
+  $("#site-class option").each( function() {
+    if($(this).val() == usgs.request.parameters.siteClass) {
+      context.siteClass = $(this).html();
+    }
+  });
+
+  for(key in usgs.response.data)
+  {
+    if(key.indexOf("_note")>0){
+      error_key = key.replace("_note","");
+      context[error_key] = usgs.response.data[key];
+
+      switch(error_key){
+        case 'fv':
+          context.sd1 = usgs.response.data.sd1 + '  -' + usgs.response.data[key];
+          context.sdc = usgs.response.data.sdc + '  -' + usgs.response.data[key];
+          context.sm1 = usgs.response.data.sm1 + '  -' + usgs.response.data[key];
+              context.fv = usgs.response.data.fv + '  -' + usgs.response.data[key];
+          break;
+        case 'fa':
+          context.sms = usgs.response.data.sms +'  -'+ usgs.response.data[key];
+          context.sds = usgs.response.data.sds +'  -'+ usgs.response.data[key];
+              context.fa = usgs.response.data.fa +'  -'+ usgs.response.data[key];
+      }
+    }
+  }
+
+  var html = template(context);
+  $("#result").html(html);
+
+  if(usgs.response.data.sdSpectrum != null){
+    sd_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.sdSpectrum);
+    charts_config.sd.data = sd_data;
+  }
+  if(usgs.response.data.smSpectrum != null){
+    sm_data = [["Period, T(sec)", "Sa(g)"]].concat(usgs.response.data.smSpectrum);
+    charts_config.sm.data = sm_data
+  }
+  if(usgs.response.data.smSpectrum == null && usgs.response.data.sdSpectrum == null) {
+    $(".spectrum-charts").hide();
+  }
+  else{
+    makecharts();
+    $(".spectrum-charts").show();
+  }
+
+};
 
 function display_asce7_nehrp_ibc_info(lat,lng,formatted_address, usgs){
   usgsDate = new Date(usgs.request.date);
@@ -703,6 +801,15 @@ function display_asce41_info(lat,lng,formatted_address, usgs){
 
   var html = template(context);
   $("#result").html(html);
+}
+
+function copy_table_data(elementId){
+  var range = document.createRange();
+  range.selectNode(document.getElementById(elementId));
+  window.getSelection().removeAllRanges(); // clear current selection
+  window.getSelection().addRange(range); // to select text
+  document.execCommand("copy");
+  window.getSelection().removeAllRanges();// to deselect
 }
 
 function makecharts(){
