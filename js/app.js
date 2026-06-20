@@ -459,7 +459,7 @@ function usgs_seismic_info(lat, lng, formatted_address){
         method: 'GET',
 	timeout: 12000,
         dataType: 'json',
-        url: 'https://earthquake.usgs.gov/ws/designmaps/'+ dcrd +'.json',
+        url: 'https://earthquake.usgs.gov/ws/building-codes/'+ dcrd +'/calculate',
         data: input,
         success: function(data, status, jqXHR){
           if(data.request.status == "success"){
