@@ -640,7 +640,7 @@ function display_asce7_nehrp_ibc_info(lat,lng,formatted_address, usgs){
 
   for(key in usgs.response.data)
   {
-    if(key.indexOf("_note")>0){
+    if(key.indexOf("_note") > 0 && usgs.response.data[key] != null){
       error_key = key.replace("_note","");
       context[error_key] = usgs.response.data[key];
 
