@@ -1,24 +1,54 @@
-.navbar, .search-container, .jumbotron, footer, hr,.d-print-none { display: none; }
+/* Print styles optimized for US Letter (8.5in x 11in). */
+@page {
+  size: 8.5in 11in;
+  margin: 0.5in;
+}
 
-.card { border: 0px; }
-html,body { font-family: arial; font-size: 10px }
-table { width: 100%; border:1px solid #ccc; margin-bottom: 5px;}
-th { text-align: left;}
-td{ padding: 3px; }
-tr:nth-child(even) { background-color:#eee;}
+/* Hide screen-only chrome. */
+.navbar, .search-container, .jumbotron, footer, hr, .d-print-none { display: none !important; }
 
-.col-md-6 { display:inline-block; }
-.text-muted {
-    color: #868e96!important; font-size: 14px; margin: 10px 0px;
-}
-.h5, h5 {
-    font-size: 18px;
-    margin:0px;
-}
-.h3, h3 {
-    font-size: 25px; margin-bottom: 5px;
-}
- 
-.alert { color: #856404; text-align: center; background-color: #fff3cd; border-color: #ffeeba; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: .25rem;}
-.page-break {page-break-after: always;}
-.page-break-counter:nth-of-type(4) {page-break-after: always;}
+/* Print backgrounds (striped tables, map marker) instead of dropping them. */
+* { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+html, body { font-family: arial; font-size: 10px; margin: 0; padding: 0; }
+
+/* Use the full printable width; drop Bootstrap's fixed container widths. */
+.container { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+.card, .card-body { border: 0; padding: 0 !important; }
+
+/* Keep Bootstrap's grid columns side-by-side in print regardless of media width. */
+.row { display: flex; flex-wrap: wrap; }
+.col-md-12 { flex: 0 0 100%; max-width: 100%; }
+.col-md-8  { flex: 0 0 66.6667%; max-width: 66.6667%; }
+.col-md-6  { flex: 0 0 50%; max-width: 50%; }
+.col-md-4  { flex: 0 0 33.3333%; max-width: 33.3333%; }
+.col-md-3  { flex: 0 0 25%; max-width: 25%; }
+
+/* Tables: full width, repeat headers across page breaks, avoid splitting rows. */
+table { width: 100%; border: 1px solid #ccc; margin-bottom: 5px; page-break-inside: auto; }
+thead { display: table-header-group; }
+tr { page-break-inside: avoid; page-break-after: auto; }
+th { text-align: left; }
+td { padding: 3px; }
+tr:nth-child(even) { background-color: #eee; }
+caption { caption-side: top; font-weight: bold; text-align: center; }
+
+/* Keep the spectrum column tables tidy and within their columns. */
+.spectrum-table { width: 100%; table-layout: fixed; }
+
+/* Charts: constrain to their column so the reflowed SVG never overflows. */
+.spectrum-charts { max-width: 100% !important; height: 260px !important; page-break-inside: avoid; overflow: hidden; }
+.spectrum-charts svg { max-width: 100% !important; }
+
+/* Static map image (print-only) scales to the page. */
+.map-img img { max-width: 100% !important; height: auto; }
+
+.text-muted { color: #868e96 !important; font-size: 14px; margin: 10px 0px; }
+.h5, h5 { font-size: 18px; margin: 0px; }
+.h3, h3 { font-size: 25px; margin-bottom: 5px; }
+
+.alert { color: #856404; text-align: center; background-color: #fff3cd; border-color: #ffeeba; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: .25rem; }
+
+/* Explicit page breaks from the templates. */
+.page-break { page-break-after: always; }
+.page-break-counter:nth-of-type(4) { page-break-after: always; }
