@@ -5,18 +5,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Free tool to look up ASCE 7 / ASCE 41 / NEHRP / IBC seismic design parameters by address or coordinates, powered by USGS. Print-friendly results and response spectra.">
-    <link rel="icon" href="img/favicon.png" type="image/png">
-    <!-- Open Graph / social sharing -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="U.S. Seismic Design Maps">
-    <meta property="og:description" content="Look up seismic design parameters (ASCE 7-22, ASCE 41, NEHRP, IBC) by address or coordinates, powered by USGS.">
-    <meta property="og:url" content="https://www.seismicmaps.org/">
-    <meta property="og:image" content="https://www.seismicmaps.org/img/seaoc-logo.png">
-    <meta name="twitter:card" content="summary">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" media="screen" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <style type="text/css" media="screen">
     #map { display: block; width: 100%; height: 300px; }
     .jumbotron { padding: 0px; }
@@ -65,31 +56,23 @@
     }
     .spectrum-charts { height: 300px; }
     .spectrum-charts-print { height: 250px; width:350px; }
-    /* ASCE 41-23 spectrum tables: fill the column width, even columns. */
-    .spectrum-table { width: 100%; table-layout: fixed; }
-    .spectrum-table th, .spectrum-table td { overflow: hidden; text-overflow: ellipsis; }
-    /* Result templates put .table-responsive directly on the <table>, which in
-       Bootstrap 4.6 makes it display:block and shrink to its content. Force a
-       full-width table layout so result tables fill their container. */
-    #result table.table-responsive { display: table; width: 100%; }
     </style>
     <link rel="stylesheet" media="print" href="css/print.css" />
-    <!-- Global site tag (gtag.js) - Google Analytics 4 (property G-EBER24QRQJ).
-         Replaced the retired Universal Analytics property (UA-128073367-1),
-         which stopped collecting data on 2023-07-01. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EBER24QRQJ"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-128073367-1"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+  window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-EBER24QRQJ');
+
+        gtag('config', 'UA-128073367-1');
     </script>
 
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
-        <a class="navbar-brand" href="http://www.seaoc.org" target="_blank"><img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/seaoc-logo.png" style="width:50px; margin-right:5px;" /></a><a href="https://oshpd.ca.gov" target="_blank"><img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/oshpd-logo.jpg" style="width:75px; margin-right:10px;" /> </a> <a href="/" class="navbar-brand">Seismic Design Maps</a>
+        <a class="navbar-brand" href="http://www.seaoc.org" target="_blank"><img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/seaoc-logo_2026.png" style="width:75px; margin-right:5px;" /></a><a href="https://hcai.ca.gov" target="_blank"><img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/oshpd-logo.jpg" style="width:75px; margin-right:10px;" /> <a href="https://hcai.ca.gov" target="_blank"><img class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline" src="img/HCAI_Logo_Flat_Simple.png" style="width:65px; margin-right:10px;" /> </a> <a href="/" class="navbar-brand">Seismic Design Maps</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -103,7 +86,7 @@
               <a class="nav-link" href="about.html">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="https://github.com/manrajsingh/seismic-maps/issues">Report an Issue</a>
+              <a class="nav-link" href="about.html">USGS Acknowledgment</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="contact.html">Contact</a>
@@ -141,8 +124,6 @@
       </div>
     </div>
     <div class="container">
-      <div class="announcements-container" aria-live="polite" aria-atomic="true">
-      </div>
       <div class="alerts-container">
       </div>
       <div class="d-none visible-print-inline-block">
@@ -153,12 +134,11 @@
         <h3>Search for Address or Coordinates</h3> &nbsp;
         <div class="row">
             <div class="input-group col-md-4">
-              <div class="input-group-prepend"><span class="input-group-text" id="btnGroupAddon">Reference<span class="glyphicons glyphicons-arrow-right"></span></span></div>
+              <span class="input-group-addon" id="btnGroupAddon">Reference<span class="glyphicons glyphicons-arrow-right"></span></span>
               <select class="form-control" aria-describedby="btnGroupAddon" id="dcrd">
                 <option value="asce7-22">ASCE 7-22</option>
                 <option value="asce7-16">ASCE 7-16</option>
                 <option value="asce7-10">ASCE 7-10</option>
-                <option value="asce41-23">ASCE 41-23 (beta)</option>
                 <option value="asce41-17">ASCE 41-17</option>
                 <option value="asce41-13">ASCE 41-13</option>
                 <option value="nehrp-2015">NEHRP-2015</option>
@@ -168,7 +148,7 @@
               </select>
             </div>
             <div class="input-group col-md-4 input-risk-category">
-              <div class="input-group-prepend"><span class="input-group-text" id="btnGroupAddon">Risk Category <span class="glyphicons glyphicons-arrow-right"></span></span></div>
+              <span class="input-group-addon" id="btnGroupAddon">Risk Category <span class="glyphicons glyphicons-arrow-right"></span></span>
               <select class="form-control" aria-describedby="btnGroupAddon" id="risk-category">
                 <option value="I">I</option>
                 <option value="II">II</option>
@@ -177,11 +157,11 @@
               </select>
             </div>
             <div class="input-group col-md-4 input-custom-probability">
-              <div class="input-group-prepend"><span class="input-group-text" id="btnGroupAddon"><span class="custom-probability-label">Custom Probability</span> <span class="glyphicons glyphicons-arrow-right"></span></span></div>
+              <span class="input-group-addon" id="btnGroupAddon">Custom Probability <span class="glyphicons glyphicons-arrow-right"></span></span>
               <input type="text" id="custom-probability" class="form-control" placeholder="for eg. 0.10" aria-label="Custom Probability">
             </div>
             <div class="input-group col-md-4">
-              <div class="input-group-prepend"><span class="input-group-text" id="btnGroupAddon">Site Class <span class="glyphicons glyphicons-arrow-right"></span></span></div>
+              <span class="input-group-addon" id="btnGroupAddon">Site Class <span class="glyphicons glyphicons-arrow-right"></span></span>
               <select class="form-control" id="site-class" aria-describedby="btnGroupAddon">
               </select>
             </div>
@@ -192,7 +172,7 @@
             <input type="text" id="project-title" class="form-control" placeholder="Project Title (optional)" aria-label="Project Title (optional)">
           </div>
           <div class="input-group col-md-8">
-            <span class="input-group-prepend">
+            <span class="input-group-btn">
               <div class="btn-group btn-group-toggle" data-toggle="buttons" alt="click to select the type of input">
                 <label class="btn btn-secondary active">
                   <input type="radio" class="radio-search-by-address" name="searchby" value="address" autocomplete="off" checked> Address
@@ -205,7 +185,7 @@
             <input type="text" class="form-control input-group input-address searchbox" placeholder="Address" aria-label="Search Address">
             <input type="text" class="form-control input-group input-coords input-latitude" placeholder="Latitude" aria-label="Enter Latitude">
             <input type="text" class="form-control input-group input-coords input-longitude" placeholder="Longitude" aria-label="Enter Longitude">
-            <span class="input-group-append">
+            <span class="input-group-btn">
               <button class="btn btn-primary searchbutton" type="button">Go</button>
             </span>
           </div>
@@ -215,7 +195,7 @@
       <div id="result"></div>
       <div class="d-print-block d-none"><br/><br/>
 	          <p style="text-align: center">DISCLAIMER</p>
-		      <p style="text-indent: 25px; line-height: 15px; font-size: 10px">While the information presented on this website is believed to be correct, <abbr title="Structural Engineers Association of California">SEAOC</abbr> /<abbr title="California Office of Statewide Health Planning & Development">OSHPD</abbr> and its sponsors and contributors assume no responsibility or liability for its accuracy. The material presented in this web application should not be used or relied upon for any specific application without competent examination and verification of its accuracy, suitability and applicability by engineers or other licensed professionals. SEAOC / OSHPD do not intend that the use of this information replace the sound judgment of such competent professionals, having experience and knowledge in the field of practice, nor to substitute for the standard of care required of such professionals in interpreting and applying the results of the seismic data provided by this website. Users of the information from this website assume all liability arising from such use. Use of the output of this website does not imply approval by the governing building code bodies responsible for building code approval and interpretation for the building site described by latitude/longitude location in the search results of this website.</p>
+		      <p style="text-indent: 25px; line-height: 15px; font-size: 10px">While the information presented on this website is believed to be correct, <abbr title="Structural Engineers Association of California">SEAOC</abbr> /<abbr title="California Office of Statewide Health Planning & Development">OSHPD</abbr> /<abbr title="California Department of Health Care Access and Information">HCAI</abbr> and its sponsors and contributors assume no responsibility or liability for its accuracy. The material presented in this web application should not be used or relied upon for any specific application without competent examination and verification of its accuracy, suitability and applicability by engineers or other licensed professionals. SEAOC / OSHPD / HCAI do not intend that the use of this information replace the sound judgment of such competent professionals, having experience and knowledge in the field of practice, nor to substitute for the standard of care required of such professionals in interpreting and applying the results of the seismic data provided by this website. Users of the information from this website assume all liability arising from such use. Use of the output of this website does not imply approval by the governing building code bodies responsible for building code approval and interpretation for the building site described by latitude/longitude location in the search results of this website.</p>
 		        </div>
 
       <script id="asce41-result-template" type="text/x-handlebars-template">
@@ -225,7 +205,7 @@
             <h5>{{formatted_address}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
             <div class="row d-none d-print-block map-img">
-              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key={{mapsKey}}"></div>
+              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key=AIzaSyDKDz3WNmHaEZq6Sn_AXUZXxLQSrHsnRts"></div>
             </div>
             <div class="row">
               <div class="col-md-12">
@@ -238,11 +218,6 @@
                     <tr><th scope="row">Site Class</th><td>{{siteClass}}</td></tr>
                   </tbody>
                 </table>
-              </div>
-            </div>
-            <div class="row mb-4">
-              <div class="col-md-12">
-                <div id="asce41_chart" class="spectrum-charts"></div>
               </div>
             </div>
             {{#each data}}
@@ -271,92 +246,6 @@
           </div>
         </div>
       </script>
-      <script id="asce41-23-result-template" type="text/x-handlebars-template">
-        <div class="card mt-5">
-          <div class="card-body">
-            <h3 class="card-title">{{project_title}} <button class="btn btn-primary d-print-none float-right" onclick="print_map();">Print</button></h3>
-            <h5>{{formatted_address}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
-            <div class="row d-none d-print-block map-img">
-              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key={{mapsKey}}"></div>
-            </div>
-            <div class="alert alert-warning d-print-none" role="alert">
-              <strong>Warning:</strong> ASCE 41-23 is in beta.
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <table class="table table-striped table-hover table-responsive table-sm table-bordered" data-show-print="true">
-                  <tbody>
-                    <tr><th scope="row">Date</th><td>{{dateTime}}</td></tr>
-                    <tr><th scope="row">Design Code Reference Document</th><td>{{dcrd}}</td></tr>
-                    <tr><th scope="row">Custom Return Period (yr)</th><td>{{customReturnPeriod}}</td></tr>
-                    <tr><th scope="row">Site Class</th><td>{{siteClass}}</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="row page-break-counter">
-              <div class="col-md-12">
-                <table class="table table-striped table-hover table-responsive table-sm table-bordered">
-                  <thead>
-                    <tr><th>Hazard Level</th><th>S<sub>XS</sub> (g)</th><th>S<sub>X1</sub> (g)</th></tr>
-                  </thead>
-                  <tbody>
-                    {{#each hazardLevels}}
-                      <tr><td>{{this.level}}</td><td>{{this.sxs}}</td><td>{{this.sx1}}</td></tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div id="asce41_23_chart" class="spectrum-charts"></div>
-              </div>
-            </div>
-            <div class="row page-break mt-5" id="spectrum-data">
-              <div class="col-md-4 text-center">
-                <a class="small text-muted d-print-none" href="javascript:copy_table_data('dt-bse-n')">Click to copy</a>
-                <table class="table table-striped table-hover table-sm table-bordered spectrum-table" id="dt-bse-n">
-                  <caption>BSE-2N &amp; BSE-1N</caption>
-                  <thead><tr><th class="center">Period T(s)</th><th>BSE-2N S<sub>a</sub>(g)</th><th>BSE-1N S<sub>a</sub>(g)</th></tr></thead>
-                  <tbody>
-                    {{#each bse2n.periods}}
-                    <tr><td>{{this}}</td><td>{{ lookup @root.bse2n.ordinates @index}}</td><td>{{ lookup @root.bse1n.ordinates @index}}</td></tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              </div>
-              <div class="col-md-4 text-center">
-                <a class="small text-muted d-print-none" href="javascript:copy_table_data('dt-bse-e')">Click to copy</a>
-                <table class="table table-striped table-hover table-sm table-bordered spectrum-table" id="dt-bse-e">
-                  <caption>BSE-2E &amp; BSE-1E</caption>
-                  <thead><tr><th class="center">Period T(s)</th><th>BSE-2E S<sub>a</sub>(g)</th><th>BSE-1E S<sub>a</sub>(g)</th></tr></thead>
-                  <tbody>
-                    {{#each bse2e.periods}}
-                    <tr><td>{{this}}</td><td>{{ lookup @root.bse2e.ordinates @index}}</td><td>{{ lookup @root.bse1e.ordinates @index}}</td></tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              </div>
-              {{#if rp975}}
-              <div class="col-md-4 text-center">
-                <a class="small text-muted d-print-none" href="javascript:copy_table_data('dt-underlying')">Click to copy</a>
-                <table class="table table-striped table-hover table-sm table-bordered spectrum-table" id="dt-underlying">
-                  <caption>Underlying Return Periods</caption>
-                  <thead><tr><th class="center">Period T(s)</th><th>975-yr S<sub>a</sub>(g)</th><th>224-yr S<sub>a</sub>(g)</th></tr></thead>
-                  <tbody>
-                    {{#each rp975.periods}}
-                    <tr><td>{{this}}</td><td>{{ lookup @root.rp975.ordinates @index}}</td><td>{{ lookup @root.rp224.ordinates @index}}</td></tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              </div>
-              {{/if}}
-            </div>
-          </div>
-        </div>
-      </script>
       <script id="asce7-22" type="text/x-handlebars-template">
         <div class="card mt-5">
           <div class="card-body">
@@ -364,7 +253,7 @@
             <h5>{{formatted_address}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
             <div class="row d-none d-print-block map-img">
-              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key={{mapsKey}}"></div>
+              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key=AIzaSyDKDz3WNmHaEZq6Sn_AXUZXxLQSrHsnRts"></div>
             </div>
             <div class="row">
               <div class="col-md-12">
@@ -494,7 +383,7 @@
             <h5>{{formatted_address}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Latitude, Longitude: {{latlng}}</h6>
             <div class="row d-none d-print-block map-img">
-              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key={{mapsKey}}"></div>
+              <img style="width:100%;" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{latlng}}&markers={{latlng}}&zoom={{mapZoom}}&size=768x200&key=AIzaSyDKDz3WNmHaEZq6Sn_AXUZXxLQSrHsnRts"></div>
             </div>
             <div class="row">
               <div class="col-md-12">
@@ -582,7 +471,7 @@
                 </button>
               </div>
               <div class="modal-body">
-		      <p style="text-indent: 25px; line-height: 25px;">While the information presented on this website is believed to be correct, <abbr title="Structural Engineers Association of California">SEAOC</abbr> /<abbr title="California Office of Statewide Health Planning & Development">OSHPD</abbr> and its sponsors and contributors assume no responsibility or liability for its accuracy. The material presented in this web application should not be used or relied upon for any specific application without competent examination and verification of its accuracy, suitability and applicability by engineers or other licensed professionals. SEAOC / OSHPD do not intend that the use of this information replace the sound judgment of such competent professionals, having experience and knowledge in the field of practice, nor to substitute for the standard of care required of such professionals in interpreting and applying the results of the seismic data provided by this website. Users of the information from this website assume all liability arising from such use. Use of the output of this website does not imply approval by the governing building code bodies responsible for building code approval and interpretation for the building site described by latitude/longitude location in the search results of this website.</p>
+		      <p style="text-indent: 25px; line-height: 25px;">While the information presented on this website is believed to be correct, <abbr title="Structural Engineers Association of California">SEAOC</abbr> /<abbr title="California Office of Statewide Health Planning & Development">OSHPD</abbr>/<abbr title="California Department of Health Care Access and Information">HCAI</abbr> and its sponsors and contributors assume no responsibility or liability for its accuracy. The material presented in this web application should not be used or relied upon for any specific application without competent examination and verification of its accuracy, suitability and applicability by engineers or other licensed professionals. SEAOC / OSHPD do not intend that the use of this information replace the sound judgment of such competent professionals, having experience and knowledge in the field of practice, nor to substitute for the standard of care required of such professionals in interpreting and applying the results of the seismic data provided by this website. Users of the information from this website assume all liability arising from such use. Use of the output of this website does not imply approval by the governing building code bodies responsible for building code approval and interpretation for the building site described by latitude/longitude location in the search results of this website.</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -597,13 +486,13 @@
 
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.8/dist/handlebars.min.js" integrity="sha384-/7IOPDPk7kcWe970wNJpeApuC/EzCQwonLz5G/s//R5Jji9QWBcbfASHI0G1nh2p" crossorigin="anonymous"></script>
-    <script src="js/app.js?v=2"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
+    <script src="js/app.js?last_update=03092020"></script>
     <!-- Optional JavaScript -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKDz3WNmHaEZq6Sn_AXUZXxLQSrHsnRts&loading=async&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKDz3WNmHaEZq6Sn_AXUZXxLQSrHsnRts&callback=initMap" async defer></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <!--script src="js/vendor/jspdf.min.js"></script>
     <script src="js/vendor/html2canvas.min.js"></script>
